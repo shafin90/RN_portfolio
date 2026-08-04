@@ -967,22 +967,50 @@
           </div>
           <div class="timeline-item">
             <div class="timeline-head">
-              <h3>Mobile Developer — Govihari</h3>
+              <h3>Full-Stack Developer — Govihari</h3>
               <span class="timeline-time">Contract via Chakri Muthyala · Nov 2024 – Jun 2025 · India · Remote</span>
             </div>
-            <span class="timeline-badge badge-qa">QA</span>
-            <p class="timeline-desc">Ticket booking app for tourists of the Godavari River, India's second largest river.</p>
+            <div class="timeline-badges">
+              <span class="timeline-badge badge-delivered">production</span>
+              <span class="timeline-badge badge-qa">QA</span>
+            </div>
+            <span class="timeline-tagline">Built end-to-end: REST API · Admin Dashboard · Mobile App | Turborepo Monorepo</span>
+            <p class="timeline-desc">A complete boat booking platform for charter services — customers browse boats, select dates and passengers, choose add-ons (meals, insurance, tour guides), pay via Razorpay, and receive PDF tickets with push notification confirmations. Admins manage fleet inventory, bookings, pricing, and analytics through a dedicated dashboard. Built as a Turborepo monorepo with 3 apps and 5 shared packages.</p>
             <div class="timeline-tech">
+              <span>Turborepo</span>
               <span>React Native</span>
+              <span>Expo</span>
               <span>React</span>
+              <span>Vite</span>
               <span>Express</span>
               <span>MongoDB</span>
+              <span>RabbitMQ</span>
+              <span>Redis</span>
               <span>Razorpay</span>
               <span>Firebase</span>
+              <span>Puppeteer</span>
+              <span>Sentry</span>
+              <span>Docker</span>
             </div>
             <ul class="timeline-list">
-              <li>Built the full-stack application — React Native mobile app, React admin dashboard, and Express + MongoDB backend with Razorpay payments and Firebase auth.</li>
+              <li><b>Architecture</b> — Monorepo with Turborepo + pnpm workspaces. Three applications (API, admin dashboard, mobile app) share five internal packages (@govihari/types, @govihari/utils, @govihari/api-client, @govihari/ui, @govihari/config). Turborepo's build caching makes subsequent builds near-instant.</li>
+              <li><b>Async booking pipeline</b> — Bookings enqueue a job to RabbitMQ and return HTTP 202 Accepted. A separate worker executes atomic MongoDB transactions (findOneAndUpdate with $inc: -1 and availableSeats: { $gt: 0 }) — preventing overselling under concurrent load.</li>
+              <li><b>Backend</b> — 11 feature modules with controller/service separation (booking, boat, user, meal, payment, ticket, dashboard, pricing, transportation, notifications, otherCost). 8 Mongoose models with auto-generated bookingID/invoiceID, virtual fields, and validators. Middleware: CORS, Helmet, gzip, Morgan, rate limiting, Joi validation.</li>
+              <li><b>RabbitMQ</b> — Durable queue with persistent messages, configurable prefetch (default: 10), graceful degradation (API continues running if broker is unavailable). Worker ACKs successful jobs, NACKs with requeue on transient errors.</li>
+              <li><b>Redis</b> — Lazy-connected ioredis for rate limiting and caching. Connects only if REDIS_URL is configured — app runs fine without it.</li>
+              <li><b>PDF tickets</b> — Puppeteer renders dynamic HTML templates to PDF (boarding points, passenger manifest, cancellation policy, terms). Docker image ships Chromium with PUPPETEER_EXECUTABLE_PATH configured.</li>
+              <li><b>Admin Dashboard</b> — React + Vite with tabbed management UI (Boats, Meals, Transportation, Bookings). Custom stale-while-revalidate cache with optimistic updates. Drag-and-drop photo upload. Date range filtering and CSV export. FCM push notifications on service changes. Sentry with source maps and session replay.</li>
+              <li><b>Mobile App</b> — 7 feature modules (auth, booking, catalog, home, payment, pricing, ticketing). MobX singleton RootStore with bootstrap() hydrating session from AsyncStorage. Razorpay SDK integration with HMAC verification. Phone-number auth via Firebase OTP. Offline-aware persistence. PDF ticket download via react-native-fs.</li>
+              <li><b>Infrastructure</b> — PM2 cluster mode + fork mode, Docker Compose, DigitalOcean App Platform. Artillery load testing at 90 req/s.</li>
             </ul>
+            <div class="timeline-stats">
+              <span>3 apps</span>
+              <span>5 shared packages</span>
+              <span>11 modules</span>
+              <span>8 models</span>
+              <span>40+ endpoints</span>
+              <span>Zero overselling</span>
+            </div>
           </div>
           <div class="timeline-item">
             <div class="timeline-head">
@@ -1157,16 +1185,48 @@
       <div class="modal-card">
         <div class="modal-header">
           <div>
-            <h3>Govihari</h3>
-            <span class="case-sub">Mobile Developer · Contract via Chakri Muthyala · QA</span>
+            <h3>Govihari — Full-Stack Boat Booking Platform</h3>
+            <span class="case-sub">Full-Stack Developer · Contract via Chakri Muthyala · Nov 2024 – Jun 2025 · Production-Deployed</span>
           </div>
           <button class="modal-close" data-modal-close aria-label="Close">✕</button>
         </div>
         <div class="modal-body">
-          <p>Ticket booking app for tourists of the Godavari River, India's second largest river.</p>
-          <h4>What I Built</h4>
+          <p>A complete boat booking platform for charter services — customers browse boats, select dates and passengers, choose add-ons (meals, insurance, tour guides), pay via Razorpay, and receive PDF tickets with push notification confirmations. Admins manage fleet inventory, bookings, pricing, and analytics through a dedicated dashboard. Built as a Turborepo monorepo with 3 apps and 5 shared packages.</p>
+          <h4>Architecture</h4>
           <ul>
-            <li>Built the full-stack application — React Native mobile app, React admin dashboard, and Express + MongoDB backend with Razorpay payments and Firebase auth.</li>
+            <li><b>Monorepo</b> — Turborepo + pnpm workspaces. Three applications (API, admin dashboard, mobile app) share five internal packages (@govihari/types, @govihari/utils, @govihari/api-client, @govihari/ui, @govihari/config). Turborepo's build caching makes subsequent builds near-instant.</li>
+            <li><b>Async booking pipeline</b> — Bookings enqueue a job to RabbitMQ and return HTTP 202 Accepted. A separate worker executes atomic MongoDB transactions (findOneAndUpdate with $inc: -1 and availableSeats: { $gt: 0 }) — preventing overselling under concurrent load.</li>
+            <li><b>Shared Sentry instrumentation</b> — Single @govihari/utils/sentry package exports buildSentryBaseConfig(), enrichSentryEvent(), and filterDebugBreadcrumb(). Backend, dashboard, and mobile all import from it.</li>
+          </ul>
+          <h4>Backend — Express.js + MongoDB</h4>
+          <ul>
+            <li>11 feature modules with controller/service separation (booking, boat, user, meal, payment, ticket, dashboard, pricing, transportation, notifications, otherCost).</li>
+            <li>8 Mongoose models with auto-generated bookingID/invoiceID, virtual fields (e.g., availabilityPercentage), and validators (e.g., availableSeats can never exceed capacity).</li>
+            <li>Middleware: CORS, Helmet, gzip, Morgan, express-rate-limit on payment verification, Joi validation factories for body/query/params.</li>
+            <li>RabbitMQ — durable queue with persistent messages, configurable prefetch (default: 10), graceful degradation. Worker ACKs successful jobs, NACKs with requeue on transient errors.</li>
+            <li>Redis — lazy-connected ioredis for rate limiting and caching. Connects only if REDIS_URL configured.</li>
+            <li>PDF tickets — Puppeteer renders dynamic HTML to PDF (boarding points, passenger manifest, cancellation policy). Docker ships Chromium with PUPPETEER_EXECUTABLE_PATH.</li>
+            <li>Deployment — PM2 cluster mode (API) + fork mode (worker), Docker Compose, DigitalOcean App Platform, Vercel serverless.</li>
+          </ul>
+          <h4>Admin Dashboard — React + Vite</h4>
+          <ul>
+            <li>Tabbed management UI (Boats, Meals, Transportation, Bookings) with shared HeaderAndMenuContainer layout. React-Bootstrap tabs switching without full-page reloads.</li>
+            <li>Custom stale-while-revalidate cache — in-memory Map-based fetchWithCache() with optimistic updates via mutateCache() and clearCache() for invalidation.</li>
+            <li>Drag-and-drop photo upload via HTML5 drag events with base64 encoding. Date range filtering via react-date-range. One-click CSV export.</li>
+            <li>FCM push notifications on boat/meal/transportation edits. Sentry with source maps, axios interceptor, React Router instrumentation, session replay.</li>
+          </ul>
+          <h4>Mobile App — React Native + Expo</h4>
+          <ul>
+            <li>7 feature modules (auth, booking, catalog, home, payment, pricing, ticketing) each with ui/ and hooks/ directories.</li>
+            <li>MobX singleton RootStore — bootstrap() hydrates session from AsyncStorage, initializes catalog, fetches pricing, registers FCM token before first render.</li>
+            <li>Razorpay SDK — creates order, launches SDK (UPI, cards, netbanking, wallets), verifies HMAC signature, enqueues booking to RabbitMQ, transitions to boarding pass.</li>
+            <li>Phone-number auth via Firebase OTP with verification ID management and auto-verification. Session persisted to AsyncStorage.</li>
+            <li>PDF tickets — react-native-fs writes PDF to document directory, react-native-file-viewer opens with native viewer.</li>
+          </ul>
+          <h4>Infrastructure</h4>
+          <ul>
+            <li><b>Backend</b> — Node.js 18, Express 4, Mongoose 8, MongoDB, RabbitMQ, Redis, Razorpay, FCM, Cloudinary, Puppeteer, Sentry, Docker, PM2, ESLint, Prettier, Husky.</li>
+            <li><b>Stats</b> — 3 apps, 5 shared packages, 11 modules, 8 models, 40+ endpoints, 7 mobile features. Artillery load tested at 90 req/s. Zero overselling via atomic MongoDB transactions.</li>
           </ul>
         </div>
       </div>
