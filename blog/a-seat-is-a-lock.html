@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Booking is a distributed lock, a lying payment, and a refund policy — not a seat map.">
+  <title>A seat is a lock — Mashrafi Ahnam Shafin</title>
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+
+  <header class="nav">
+    <div class="wrap nav-inner">
+      <a href="../index.html" class="nav-name">Mashrafi Ahnam Shafin</a>
+      <nav class="nav-links">
+        <a href="../index.html#work">Work</a>
+        <a href="../index.html#engineering">Engineering</a>
+        <a href="../blog.html" aria-current="page">Blog</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page">
+    <article class="wrap post">
+      <p class="eyebrow"><a href="../blog.html">Blog</a> · Sep 2026</p>
+      <h1>A seat is a lock</h1>
+      <p class="lede">Founders see a map of chairs. The product is whether two phones can buy the same row — and whether money and the ticket ever disagree.</p>
+
+      <div class="prose">
+        <p>Every booking screen is a lie that has to stay consistent. The user taps a seat. Another user taps it 400ms later on a worse network. A payment gateway retries. A webhook arrives twice. Someone kills the app on the confirm screen.</p>
+        <p>If your model is “the client reserved a chair,” you will oversell. The chair is not state. The lock is state. Hold it with a TTL long enough to pay, short enough that abandoned carts give the inventory back. Commit the ticket only after a confirmed charge. Treat the webhook as an idempotent event, never as “the user tapped pay.”</p>
+        <p>Refunds belong in the same story. Time-to-departure is a rule: 100% before 48 hours, then a step-down, then nothing. If refunds live in Slack, you do not have a payments product. You have an operations habit that will not scale past the first angry thread.</p>
+        <p>Gateways change — PayU hashes on the server, Razorpay, Stripe, mobile money. The invariant does not: double-tap never charges twice. A ticket never exists without money. The mobile UI is a citizen of that contract, not the source of truth.</p>
+      </div>
+    </article>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer-inner">
+      <span>© 2026 Mashrafi Ahnam Shafin</span>
+      <span>Mobile Product Developer</span>
+    </div>
+  </footer>
+
+</body>
+</html>
