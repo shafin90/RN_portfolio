@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Deep engineering case studies: Legato, SRKAN, Govihari, KavooGo, JetExpress — mobile products that survive the real world.">
+  <title>Case Studies — Mashrafi Ahnam Shafin</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <header class="nav">
+    <div class="wrap nav-inner">
+      <a href="index.html" class="nav-name">Mashrafi Ahnam Shafin</a>
+      <nav class="nav-links">
+        <a href="index.html">Home</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+
+    <section class="hero">
+      <div class="wrap">
+        <p class="eyebrow">Case Studies</p>
+        <h1>Five products. One discipline.</h1>
+        <p class="lede">Each product faced a different hard constraint — investor demo in 9 months, villages with no network, boats with fixed capacity, rewards across two languages, buses across 30 cities. The engineering discipline that solved them is the same.</p>
+      </div>
+    </section>
+
+    <section class="case-study" id="legato">
+      <div class="wrap">
+        <p class="eyebrow">Case Study</p>
+        <h2 class="section-title">Legato — Musician collaboration platform, 9 months to investor demo</h2>
+        <div class="story-body">
+          <h3>The constraint</h3>
+          <p>iOS and Android apps live on both stores in 9 months for an investor demo. Sign-in with Google and Apple, profiles with skills, discovery by name, skill, and proximity, collaboration flows wired into chat and push notifications. One crash in the demo room and the round collapses.</p>
+
+          <h3>Architecture decisions</h3>
+          <p><strong>Expo + EAS for release velocity.</strong> Expo SDK upgrades kept the runtime current without native divergence. EAS staged rollouts limited blast radius — 5%, 25%, 100% — so a regression caught at 5% never reached the demo device. Feature flags gated every unfinished collaboration path; the demo build only included flagged-on code paths, each proven on staging first.</p>
+
+          <p><strong>Identity as a single write.</strong> Better Auth on a custom Postgres adapter (not the default SQLite) meant registration was one transaction: create user, provision profile, create Stream Chat identity, assign initial skills. No orphan profiles, no race between auth and chat. Google and Apple sign-in flowed through the same adapter; email OTP recovery reused the same session store.</p>
+
+          <p><strong>Dual-channel notifications with deep-link integrity.</strong> GetStream for in-app chat events, Firebase for background push. Both channels emitted the same event schema: <code>{ type, payload, deepLink }</code>. Badge counts synced from unreadCount on every foreground resume and every push receipt. Taps routed through a single handler that parsed the deepLink and pushed the exact screen — ActiveChats, CollaborationRequest, Profile — regardless of whether the app was warm, cold, or dead.</p>
+
+          <p><strong>Proximity + skill matching at query time.</strong> Discovery combined name search (PostgreSQL trigram), skill matching (array overlap on normalized skill tags), and proximity (PostGIS <code>ST_DWithin</code> on lat/lng with GIST index). The query builder composed these as weighted factors — name 0.5, skills 0.3, distance 0.2 — with a hard filter for collaboration intent flags. No client-side merge; the database returned ranked results in a single round trip.</p>
+
+          <h3>Result</h3>
+          <p>Live on App Store and Play Store. Zero crashes at demo. The same discipline — staged rollouts, feature flags, single-transaction identity, dual-channel push with deep links, composed query ranking — runs in every other product I ship.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="case-study" id="srkan">
+      <div class="wrap">
+        <p class="eyebrow">Case Study</p>
+        <h2 class="section-title">SRKAN — Devotional platform, offline-first across continents</h2>
+        <div class="story-body">
+          <h3>The constraint</h3>
+          <p>Communities across India, Africa, and the Middle East. Villages with 2G, intermittent connectivity, users on 2GB RAM devices. Search across programs, testimonials, donations that stays instant. Donations that complete on bad radios. Reminders that fire without a server.</p>
+
+          <h3>Architecture decisions</h3>
+          <p><strong>Offline-first reminders via local scheduling.</strong> Expo Notifications with a scheduler provider that rebuilds the plan from programs and daily schedules on every app launch. 60-item iOS limit respected by pruning to nearest 60 reminders across 6 weeks ahead. 10-minute lead time per reminder. Android notification channels with importance levels per category (prayer, event, donation). Provisional iOS permissions let quiet reminders prove value before the prompt. Multilingual titles stored per-program, rendered locally. Zero server dependency — the reminder fires in airplane mode.</p>
+
+          <p><strong>Multi-field search with tenant-aware indexing.</strong> Programs, testimonials, donations — each with different searchable attributes. PostgreSQL trigram indexes on name/description, B-tree on status/featured/date, composite indexes matching the query shapes. Pagination via cursor (not offset) so new content mid-browse doesn't duplicate or swallow rows. Filters for status, featured, date ranges applied in the index scan, not post-query. Sub-100ms p95 on cold start.</p>
+
+          <p><strong>Donation flow: idempotent by design.</strong> PayU integration with server-side verification — never trust client callback. Webhook-driven status updates with deduplication via unique event ID per transaction. Multi-currency tracking with rates frozen at payment initiation. Receipt uploads for manual verification of bank transfers, stored encrypted. Automated SWIFT instructions emailed for international donors. Idempotency key = donation intent ID; a retry on a dropped connection reuses the same key, never double-charges.</p>
+
+          <p><strong>Performance on 2GB RAM.</strong> Image loading via expo-image with thumbnail cache, aspect-aware compression, lazy-load below fold. VirtualizedList for all long lists (programs, testimonials, donations) with windowSize=5 and removeClippedSubviews. Bundle split via Expo router lazy routes — donation flow, search, admin — loaded only when navigated. JS bundle stays under 3MB gzipped.</p>
+
+          <h3>Result</h3>
+          <p>App works in places with no coverage, on devices with 2GB RAM, survives OS kills because every piece of state assumes the process is dead. Store ratings hold at 4.7+ across regions because the product doesn't blame the network — it designs for it.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="case-study" id="govihari">
+      <div class="wrap">
+        <p class="eyebrow">Case Study</p>
+        <h2 class="section-title">Govihari — River-boat ticketing, fixed capacity, zero double-sell</h2>
+        <div class="story-body">
+          <h3>The constraint</h3>
+          <p>A boat has fixed capacity. Concurrent load overselling means turning paying passengers away at the dock. Phone numbers are the primary identity (rural users, no email). Guest checkout required. Payments via Razorpay with HMAC verification.</p>
+
+          <h3>Architecture decisions</h3>
+          <p><strong>Reserve → Pay → Confirm as a state machine.</strong> Reserve creates a seat hold with TTL (Redis lock, 10 min). Pay calls Razorpay order creation server-side, HMAC-validates the signature on verification, creates the booking row inside the same DB session as the verified payment — so ticket and money can never disagree. Confirm converts hold → ticket. Failed/expired payments auto-cancel and release the seat. No manual intervention, no stuck inventory.</p>
+
+          <p><strong>Guest checkout with idempotency.</strong> No user row required. Idempotency key = phone + boat + departure timestamp + seat. Retries on bad network reuse the same key — same transaction, never a new charge. Phone number verified via Firebase OTP; token stored encrypted with user context.</p>
+
+          <p><strong>On-device totals matching server.</strong> Booking total calculated client-side (base + taxes + fees) and sent with order creation. Server re-computes and asserts equality; mismatch rejects the order. Prevents client-side manipulation and currency rounding drift.</p>
+
+          <p><strong>Push tied to verification.</strong> FCM token fetched on launch and again after OTP verification — that's the moment device becomes a known user. Foreground handlers present alerts; background handlers persist and badge. Backend exposes explicit endpoints: save-token, get-tokens, send-notification — auditable, not side effects.</p>
+
+          <h3>Result</h3>
+          <p>Zero double-sells at the dock. Stuck inventory eliminated — every seat either confirmed or released. Guest checkout converts users who would otherwise drop at account creation.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="case-study" id="kavoogo">
+      <div class="wrap">
+        <p class="eyebrow">Case Study</p>
+        <h2 class="section-title">KavooGo — Rewards platform, EN/FR Africa, idempotent earning loop</h2>
+        <div class="story-body">
+          <h3>The constraint</h3>
+          <p>English- and French-speaking African markets. Campaign matching on country, city, employment, education, salary, eligibility — with normalized location names across inconsistent inputs. Stripe payments with backward-compatible contract migration. Push with SMS fallback. Earning loop that cannot double-pay on retry.</p>
+
+          <h3>Architecture decisions</h3>
+          <p><strong>Campaign matching as structured ranking.</strong> User profile: country, city, employment band, education level, salary band, eligibility flags. Campaigns target the same attributes. Matching = hard filters (eligible?) + ranked boosts (exact city > same country > adjacent). Location normalization at write time: canonical country/city tables, fuzzy match on input, stored as FK. EL/FR market handled by parallel attribute sets, same ranking function.</p>
+
+          <p><strong>Stripe migration without breaking existing users.</strong> Existing <code>campaignId</code> flow kept backward compatible. Added direct-amount flow for new campaigns. Webhook handler accepts both event shapes, normalizes to internal schema. Idempotency via Stripe event ID dedup table. Refund, failure, checkout completion, success — all tracked per event. Guest checkout supported via PaymentIntent + SetupIntent for saved cards.</p>
+
+          <p><strong>Earning loop: verify, record, reward — idempotent at each step.</strong> User completes action → server verifies against campaign rules → records earning with idempotency key (user + campaign + action hash) → triggers reward (wallet credit) in same transaction → pushes notification. Retry on any step replays the same key; wallet credit is a single-row upsert with unique constraint. Double-pay impossible by schema.</p>
+
+          <p><strong>Push with SMS fallback.</strong> Expo Push with encrypted token storage, token validation at registration, per-message ticket tracking. DeviceNotRegistered cleanup job runs daily. Push-first delivery; on permanent failure (unregistered, invalid), Infobip SMS fallback with same payload rendered to text. Read/sent tracking per message per channel. Per-user language preference (EN/FR) stored with token, rendered at send time.</p>
+
+          <h3>Result</h3>
+          <p>Campaign matching reliable across noisy location data. Stripe migration zero-downtime. Earning loop idempotent — retries on bad network never double-pay. Push delivery with SMS fallback keeps reach high across unreliable networks.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="case-study" id="jetexpress">
+      <div class="wrap">
+        <p class="eyebrow">Case Study</p>
+        <h2 class="section-title">JetExpress — Inter-city bus booking, 30+ cities, per-tenant sync</h2>
+        <div class="story-body">
+          <h3>The constraint</h3>
+          <p>30+ cities, multi-tenant (each bus company is a tenant). Two phones tap the same seat on a bad network — must never double-sell. Offline sales across cities, sync per tenant. Multi-gateway payments per company. Real-time tracking for live trips.</p>
+
+          <h3>Architecture decisions</h3>
+          <p><strong>Seat lock with Redis + idempotent events.</strong> Reserve creates Redis lock with TTL (seat + departure key). Idempotent event log (unique event ID per company) records every state transition. Async queue carries confirmations, receipts, notifications — sale path never blocks on them. Double-tap on same seat: second request hits existing lock, gets immediate "taken" response.</p>
+
+          <p><strong>Per-tenant offline sync.</strong> Each company's data isolated by <code>companyId</code> in every query, index, cache key, queue. Offline sales write to local SQLite (WatermelonDB) with pending sync flag. Sync worker pulls pending, batches by company, pushes to API with company-scoped auth token. Conflict resolution: server wins on seat state; client re-fetches and re-renders. One company's flash sale never starves another's queue.</p>
+
+          <p><strong>Multi-gateway per company.</strong> Each company configures its own gateway (PayU, Razorpay, Stripe, mobile money). Order creation routes to correct gateway config. Webhook handler verifies signature per-gateway, dedups via company-scoped event ID. Refunds queued with retry limits; exhausted retries land in dead-letter for ops.</p>
+
+          <p><strong>Real-time tracking via Socket.IO.</strong> Live trip location broadcast to company-scoped rooms. Admin dashboard sees all companies; company admin sees only their trips. KPIs (bookings, revenue, occupancy) computed per company in materialized views, refreshed per sync cycle.</p>
+
+          <h3>Result</h3>
+          <p>No double-sells across 30+ cities. Offline sales sync cleanly per tenant. Multi-gateway per company without code branching. Real-time ops visibility at scale.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer-inner">
+      <span>© 2026 Mashrafi Ahnam Shafin</span>
+      <span>Mobile Product Developer</span>
+    </div>
+  </footer>
+
+</body>
+</html>

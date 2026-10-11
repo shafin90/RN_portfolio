@@ -72,16 +72,7 @@ code {
   color: var(--ink);
 }
 
-.nav-cta {
-  background: var(--ink);
-  color: var(--bg) !important;
-  padding: 8px 16px;
-  border-radius: 999px;
-  font-weight: 600;
-  white-space: nowrap;
-}
 
-.nav-cta:hover { opacity: 0.85; }
 
 .hero { padding: 80px 0 96px; }
 
@@ -119,6 +110,11 @@ h1 {
 .lede {
   color: var(--muted);
   max-width: 36rem;
+}
+
+.lede .highlight {
+  color: #333;
+  font-weight: 550;
 }
 
 .hero-photo {
@@ -176,11 +172,10 @@ h1 {
 }
 
 .story {
-  display: grid;
-  grid-template-columns: 1fr;
   padding: 40px 0;
   border-top: 1px solid var(--line);
   scroll-margin-top: 72px;
+  max-width: var(--measure);
 }
 
 .story:last-child { padding-bottom: 0; }
@@ -233,18 +228,6 @@ h1 {
   color: var(--muted);
   max-width: var(--measure);
   margin-bottom: 12px;
-}
-
-.story-body p:first-of-type { color: var(--ink); }
-
-.story-body.collapsed p:nth-of-type(n+3) { display: none; }
-
-.story-body.collapsed p:nth-of-type(2) {
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
 }
 
 .story-more {
@@ -302,20 +285,12 @@ h1 {
   gap: 20px;
 }
 
-.contact-links a {
-  font-size: 16px;
+.contact .section-lede a {
   color: var(--muted);
-  text-decoration: underline;
-  text-underline-offset: 3px;
+  text-decoration: none;
 }
 
-.contact-links a:hover { color: var(--ink); }
-
-.contact-email {
-  font-size: 22px !important;
-  font-weight: 600;
-  color: var(--ink) !important;
-}
+.contact .section-lede a:hover { color: var(--ink); }
 
 .footer { padding: 24px 0 40px; }
 

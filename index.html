@@ -13,9 +13,10 @@
     <div class="wrap nav-inner">
       <a href="index.html" class="nav-name">Mashrafi Ahnam Shafin</a>
       <nav class="nav-links">
-        <a href="#contact" class="nav-cta">Contact</a>
+        <a href="#contact">Contact</a>
         <a href="https://www.linkedin.com/in/mashrafi-ahnam/" target="_blank" rel="noopener">LinkedIn</a>
         <a href="blog.html">Blog</a>
+        <a href="case-studies.html">Case Studies</a>
       </nav>
     </div>
   </header>
@@ -27,7 +28,7 @@
         <div class="hero-copy">
           <p class="eyebrow">Mobile Product Developer</p>
           <h1>I build the mobile product as a system — not a set of screens.</h1>
-          <p class="lede">For founders and CEOs shipping to people’s hands: discovery that stays fast, bookings that cannot double-sell, identity a dashboard can trust, and messages that still arrive after the OS has killed the app.</p>
+          <p class="lede">For founders and CEOs shipping to people's hands — discovery that stays fast, bookings that cannot double-sell, identity a dashboard can trust, messages that arrive after the OS kills the app. Built with founders in the <span class="highlight">USA, Canada, and Africa</span>.</p>
         </div>
         <figure class="hero-photo">
           <img src="portrait.jpg" alt="Mashrafi Ahnam Shafin">
@@ -59,7 +60,6 @@
           <article class="story" id="search">
             <div class="story-body collapsed">
               <h3>Search</h3>
-              <p>Search is about turning messy, growing catalogs into something that feels instant. The critical problem is never the text box — it's ranking across different shapes of data without slowing down as volume grows or failing on weak networks.</p>
               <p>Early work was about making discovery correct and fast. At <strong>SRKAN</strong>, I built multi-field search across programs, testimonials, and donations, each with different searchable attributes, with pagination and filters for status, featured content, and date ranges. For <strong>Jet Express</strong>, operating across 30+ cities, I built city, route, and station discovery with tenant-isolated queries, so onboarding a new location never interfered with existing operations.</p>
               <p>Later the problem shifted to intent. At <strong>KavooGo</strong>, across English- and French-speaking African markets, I built campaign-matching around country, city, employment, education, salary, and eligibility, normalizing inconsistent location names so targeting stayed reliable. For <strong>Legato</strong>, I built hybrid discovery combining name search, skill matching, proximity with PostGIS, and collaboration preferences. The impact was the same in each case: the user finds the right thing in one try, which is what keeps them coming back.</p>
               <button class="story-more" aria-expanded="false">See more</button>
@@ -69,7 +69,6 @@
           <article class="story" id="booking">
             <div class="story-body collapsed">
               <h3>Booking</h3>
-              <p>Booking is the hardest system to get right, because a double-sell destroys trust instantly. The critical problem is always the same: two phones tap the same seat on a bad network, payment is slow to confirm, and the system has to hold inventory without ever getting stuck.</p>
               <p>My rule: never complete a reservation before payment is verified. At <strong>Jet Express</strong>, across 30+ cities, I built the flow with Redis locks with expiration to hold the seat, idempotent events to survive retries, and async queues to carry confirmations without blocking the sale. For <strong>Govihari</strong>, where a boat has fixed capacity, I used reserve → pay → confirm, with failed or expired payments auto-cancelling and releasing the seat instead of leaving inventory stuck.</p>
               <p>The same lifecycle protects money everywhere else. At <strong>KavooGo</strong>, I handled Stripe intents and checkout sessions with webhook and refund-status tracking so a retry resolves to the same transaction, never a new charge. For <strong>SRKAN</strong>, I applied it to donations on poor networks: verification, webhook-driven status, and receipts the donor can trust. For <strong>Legato</strong>, I gated rollouts with feature flags so new collaboration paths prove out before they scale. The impact is operational: no oversell at the gate, no stuck seats, no support tickets about money.</p>
               <button class="story-more" aria-expanded="false">See more</button>
@@ -79,7 +78,6 @@
           <article class="story" id="payment">
             <div class="story-body collapsed">
               <h3>Payments</h3>
-              <p>Payments are where engineering depth turns directly into business trust. The critical problems repeat: gateways lie, webhooks arrive twice or not at all, users retry on bad networks, and every edge case touches real money.</p>
               <p>I hold one rule: verify first, handle everything idempotently. At <strong>SRKAN</strong>, I built PayU verification, webhook-driven donation status, multi-currency tracking, receipt uploads for manual verification, and automated emails for confirmations and SWIFT instructions. For <strong>Govihari</strong>, I integrated Razorpay order creation with server-side HMAC validation, created bookings inside database sessions tied to the payment lifecycle, and supported guest checkout without an account.</p>
               <p>At scale the same discipline prevents revenue loss. At <strong>Jet Express</strong>, I built multi-gateway processing with company-specific selection, unique event records per company to stop duplicate webhook processing, and queued refunds with retries plus automatic seat release on expired or failed payments. For <strong>KavooGo</strong>, I fixed a Stripe contract mismatch while keeping the existing <code>campaignId</code> flow backward compatible, added a direct-amount flow, and extended webhooks to cover success, failure, checkout completion, and refunds. The impact: every payment resolves to one truth, and finance never chases ghosts.</p>
               <button class="story-more" aria-expanded="false">See more</button>
@@ -89,7 +87,6 @@
           <article class="story" id="auth">
             <div class="story-body collapsed">
               <h3>Authentication</h3>
-              <p>Authentication is never just login — it's how a dashboard learns to trust identity. The critical problems are isolation between tenants, roles that actually hold under real operations, and sessions that stay revoked once logged out.</p>
               <p>I validate, isolate, then authorize on every request. At <strong>Jet Express</strong>, I built JWT authentication with company-level isolation — middleware that validates bearer tokens, checks revocation, loads the user, and attaches company context — plus role-based Socket.IO rooms so real-time traffic stays separated by company and responsibility. For <strong>SRKAN</strong>, I implemented hierarchical roles — super admin, admin, editor, user — through protected routes and reusable middleware.</p>
               <p>Consumer identity brought different constraints. At <strong>Govihari</strong>, I integrated Firebase phone auth where the phone number is the primary identity, with persistent FCM token management tied to notification workflows. For <strong>Legato</strong>, I integrated Better Auth on a custom Sequelize adapter for PostgreSQL with Google and Apple sign-in and email OTP recovery, where registration also provisions the profile, Stream Chat identity, and initial skills. For <strong>KavooGo</strong>, I built separate guards for users, partners, admins, teams, and dashboards, each with its own access boundary and revocation checks. The impact is quiet but decisive: the right people see the right data, and nothing else.</p>
               <button class="story-more" aria-expanded="false">See more</button>
@@ -99,7 +96,6 @@
           <article class="story" id="dashboard">
             <div class="story-body collapsed">
               <h3>Dashboards</h3>
-              <p>Every app I ship needs the dashboard behind it — the screen where ops sees what the phones are doing. The critical problem is always complexity under pressure: bookings, fleet, money, and people changing at once, with different roles needing different truths from the same data.</p>
               <p>I slice per domain with centralized auth, refresh, and real-time feeds. At <strong>Jet Express</strong>, I built a full BackOffice — bookings, trips, fleet, users, routes, stations, cities, tenants, subscriptions — with role-based routing for admin, manager, staff, and platform_admin, live trips and KPIs over Socket.IO, everything tenant-scoped by companyId.</p>
               <p>The same pattern scales down to focused operations. At <strong>SRKAN</strong>, I built program stats, branch and date-range filtering, donation export to CSV/Excel, currency listing, and status tracking across pending, success, failed, and refunded. For <strong>Govihari</strong>, I built filtering by status, date, boat, and guide, cancelled bookings with refund tracking, boat-wise occupancy and revenue, today's view, and payment KPIs. For <strong>KavooGo</strong>, I built slices for users, campaigns, transactions, and notifications with RBAC-filtered navigation and user-to-campaign matching display. The impact: a founder sees the business in one screen, and staff act without asking engineering.</p>
               <button class="story-more" aria-expanded="false">See more</button>
@@ -109,7 +105,6 @@
           <article class="story" id="push">
             <div class="story-body collapsed">
               <h3>Notification System</h3>
-              <p>Push is a delivery system, not a send call. The critical problems are brutal and consistent: the OS will kill the app, tokens rotate and die, iOS caps what you can schedule, and a message that arrives late might as well never have been sent.</p>
               <p>I assume zero signal and a dead app, then build up. At <strong>SRKAN</strong>, built for villages with poor networks, I built local scheduled reminders with expo-notifications, rebuilding the plan from programs and schedules, capped at 60 items for iOS limits, 6 weeks ahead, 10-minute lead time, with Android channels, provisional iOS permissions, and multilingual titles. No server needed. For <strong>Jet Express</strong>, I built a full FCM pipeline with sendEachForMulticast, token arrays with invalid-token pruning and preference checks, queue fan-out to all customers or scoped to a trip or bus, per-user en/fr localization, DB persistence, and Socket.IO emit with routing data.</p>
               <p>Other products needed different fallbacks for the same guarantee. At <strong>Govihari</strong>, I built token fetch and upsert on launch and after OTP, foreground alerts, background handlers, and backend send across stored tokens. For <strong>KavooGo</strong>, I built Expo Push with encrypted token storage, validation, ticket-status handling, DeviceNotRegistered cleanup, and Infobip SMS fallback when push can't deliver, with read/sent tracking. For <strong>Legato</strong>, I built dual push via GetStream and Firebase with email alongside, badge sync from unreadCount, and deep-links to the exact chat on tap. The impact: the message still arrives after the OS has killed the app — and that is what brings users back on day 30.</p>
               <button class="story-more" aria-expanded="false">See more</button>
@@ -123,8 +118,8 @@
     <section class="writing" id="writing">
       <div class="wrap">
         <p class="eyebrow">Writing</p>
-        <h2 class="section-title">Notes on systems that have to be correct.</h2>
-          <p class="section-lede">Essays for people who ship products — not a changelog of tickets.</p>
+        <h2 class="section-title">How mobile products actually behave at scale</h2>
+        <p class="section-lede">Field notes on booking, push, and search — written for people who ship.</p>
         <ul class="post-list">
           <li>
             <a href="blog/a-seat-is-a-lock.html">
@@ -152,10 +147,7 @@
       <div class="wrap">
         <p class="eyebrow">Contact</p>
         <h2 class="section-title">Mashrafi Ahnam Shafin</h2>
-        <p class="section-lede">Mobile Product Developer. Hard systems that have to be correct.</p>
-        <div class="contact-links">
-          <a class="contact-email" href="mailto:mashrafiahnam1@gmail.com">mashrafiahnam1@gmail.com</a>
-        </div>
+        <p class="section-lede">Mobile Product Developer. Hard systems that have to be correct. <a href="mailto:mashrafiahnam1@gmail.com">mashrafiahnam1@gmail.com</a></p>
       </div>
     </section>
 
@@ -170,14 +162,42 @@
 
   <script>
     (function () {
+      var WORD_LIMIT = 60;
+
+      function truncateToWords(text, limit) {
+        var words = text.trim().split(/\s+/);
+        if (words.length <= limit) return text;
+        return words.slice(0, limit).join(' ') + '…';
+      }
+
       var bodies = document.querySelectorAll('.story-body.collapsed');
       bodies.forEach(function (body) {
-        var btn = body.querySelector('.story-more');
-        if (!btn) return;
+        var heading = body.querySelector('h3');
+        var paragraphs = Array.from(body.querySelectorAll('p'));
+        var fullText = paragraphs.map(function(p) { return p.textContent; }).join(' ');
+        var truncatedText = truncateToWords(fullText, WORD_LIMIT);
+
+        var truncatedHTML = heading.outerHTML + '<p>' + truncatedText + '</p>';
+        body.innerHTML = truncatedHTML;
+
+        var btn = document.createElement('button');
+        btn.className = 'story-more';
+        btn.setAttribute('aria-expanded', 'false');
+        btn.textContent = 'See more';
+        body.appendChild(btn);
+
+        var fullHTML = body.innerHTML; // this will be rebuilt on each toggle
+
         btn.addEventListener('click', function () {
-          var collapsed = body.classList.toggle('collapsed');
-          btn.setAttribute('aria-expanded', String(!collapsed));
-          btn.textContent = collapsed ? 'See more' : 'See less';
+          var isCollapsed = body.classList.toggle('collapsed');
+          btn.setAttribute('aria-expanded', String(!isCollapsed));
+          btn.textContent = isCollapsed ? 'See more' : 'See less';
+          if (isCollapsed) {
+            body.innerHTML = heading.outerHTML + '<p>' + truncatedText + '</p>';
+          } else {
+            body.innerHTML = heading.outerHTML + paragraphs.map(function(p) { return p.outerHTML; }).join('');
+          }
+          body.appendChild(btn);
         });
       });
     })();
