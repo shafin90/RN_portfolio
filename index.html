@@ -13,7 +13,7 @@
     <div class="wrap nav-inner">
       <a href="index.html" class="nav-name">Mashrafi Ahnam Shafin</a>
       <nav class="nav-links">
-        <a href="#contact">Contact</a>
+        <a href="#contact" class="nav-cta">Contact</a>
         <a href="https://www.linkedin.com/in/mashrafi-ahnam/" target="_blank" rel="noopener">LinkedIn</a>
         <a href="blog.html">Blog</a>
       </nav>
@@ -30,89 +30,88 @@
           <p class="lede">For founders and CEOs shipping to people’s hands: discovery that stays fast, bookings that cannot double-sell, identity a dashboard can trust, and messages that still arrive after the OS has killed the app.</p>
         </div>
         <figure class="hero-photo">
-          <img src="WhatsApp Image 2026-07-06 at 5.02.30 PM.jpeg" alt="Mashrafi Ahnam Shafin">
+          <img src="portrait.jpg" alt="Mashrafi Ahnam Shafin">
         </figure>
+      </div>
+    </section>
+
+    <section class="case-study" id="case-study">
+      <div class="wrap">
+        <p class="eyebrow">Case study</p>
+        <h2 class="section-title">Shipping Legato in 9 months</h2>
+        <div class="story-body">
+          <p><strong>Legato</strong>, a musician collaboration platform, needed iOS and Android apps live in 9 months for an investor demo: sign-in with Google and Apple, profiles with skills, discovery by name, skill, and proximity, and collaboration flows wired into chat and push notifications.</p>
+          <p>I own both sides — the Expo client and the API behind it — so mobile, backend, and dashboard never disagree.</p>
+          <p>The risk was the demo itself — one crash or one broken rollout in front of investors. I kept releases safe with Expo SDK upgrades, EAS staged rollouts, and feature flags, so unfinished collaboration paths never reached users before they proved out. Identity went through Better Auth on a custom Postgres adapter, with registration provisioning the profile, Stream Chat identity, and initial skills in one pass. Notifications went dual-channel, GetStream plus Firebase, with badge counts synced and taps deep-linking to the exact chat.</p>
+          <p>Result: live on both stores, zero crashes at demo. The same discipline runs in my other products: <strong>SRKAN</strong> works with zero signal, <strong>Jet Express</strong> sells offline across 30+ cities and syncs per tenant, <strong>Govihari</strong> totals on-device to match the server exactly, and <strong>KavooGo's</strong> earning loop is idempotent so a retry can never double-pay.</p>
+        </div>
       </div>
     </section>
 
     <section class="work" id="work">
       <div class="wrap">
         <p class="eyebrow">Work</p>
-        <h2 class="section-title">What those systems look like when someone actually uses them.</h2>
+        <h2 class="section-title">Same hard problems, different products.</h2>
+        <p class="work-index"><a href="#case-study">Legato</a> · <a href="#search">Search</a> · <a href="#booking">Booking</a> · <a href="#payment">Payments</a> · <a href="#auth">Authentication</a> · <a href="#dashboard">Dashboards</a> · <a href="#push">Notification System</a></p>
 
         <div class="story-list">
 
           <article class="story" id="search">
-            <p class="story-kicker">01</p>
             <div class="story-body collapsed">
-              <h3>Engineering Search That Understands Context</h3>
-              <p>For <strong>SRKAN</strong>, a devotional platform serving communities with unreliable connectivity, I implemented multi-field search across programs, testimonials, and donations. Each module had different searchable attributes, with pagination and filters for status, featured content, and date ranges.</p>
-              <p>For <strong>Jet Express</strong>, an inter-city bus booking platform operating across 30+ cities, I worked on city, route, and station discovery with pagination, geographic data, and tenant-isolated queries. Onboarding new locations didn't interfere with existing operations.</p>
-              <p>For <strong>KavooGo</strong>, a rewards platform targeting users across English- and French-speaking African markets, I built campaign-matching logic around country, city, employment, education, salary, and eligibility. Normalizing location names and handling inconsistent country representations made targeting more reliable.</p>
-              <p>For <strong>Legato</strong>, a musician collaboration platform, I worked on a hybrid discovery system combining name search, skill matching, proximity-based discovery, and collaboration preferences. PostgreSQL and PostGIS supported location-aware queries, while structured filters matched both skills and intent.</p>
+              <h3>Search</h3>
+              <p>Search is about turning messy, growing catalogs into something that feels instant. The critical problem is never the text box — it's ranking across different shapes of data without slowing down as volume grows or failing on weak networks.</p>
+              <p>Early work was about making discovery correct and fast. At <strong>SRKAN</strong>, I built multi-field search across programs, testimonials, and donations, each with different searchable attributes, with pagination and filters for status, featured content, and date ranges. For <strong>Jet Express</strong>, operating across 30+ cities, I built city, route, and station discovery with tenant-isolated queries, so onboarding a new location never interfered with existing operations.</p>
+              <p>Later the problem shifted to intent. At <strong>KavooGo</strong>, across English- and French-speaking African markets, I built campaign-matching around country, city, employment, education, salary, and eligibility, normalizing inconsistent location names so targeting stayed reliable. For <strong>Legato</strong>, I built hybrid discovery combining name search, skill matching, proximity with PostGIS, and collaboration preferences. The impact was the same in each case: the user finds the right thing in one try, which is what keeps them coming back.</p>
               <button class="story-more" aria-expanded="false">See more</button>
             </div>
           </article>
 
           <article class="story" id="booking">
-            <p class="story-kicker">02</p>
             <div class="story-body collapsed">
-              <h3>Engineering Booking Systems That Don't Break Under Pressure</h3>
-              <p>For <strong>Jet Express</strong> — two phones tap the same seat across 30+ cities on a bad network, and a double-sell destroys trust at the boarding gate. I built the flow so a reservation is never completed before payment is verified: Redis locks with expiration hold the seat, idempotent events survive retries, and async queues carry confirmations without blocking the sale.</p>
-              <p>For <strong>Govihari</strong> — a boat has fixed capacity, so concurrent load overselling means turning paying passengers away at the dock. I used two-phase reserve → pay → confirm, with failed or expired payments auto-cancelling and releasing the seat instead of leaving inventory stuck.</p>
-              <p>For <strong>KavooGo</strong> — a retry treated as a new charge kills faith in earnings. I handled Stripe intents and checkout sessions with webhook and refund-status tracking, so every retry resolves to the same transaction.</p>
-              <p>For <strong>SRKAN</strong> — a donor on a poor network must trust the receipt, not the spinner. I applied the same lifecycle to donations: verification, webhook-driven status updates, and receipts.</p>
-              <p>For <strong>Legato</strong> — shipping to the whole base before an investor demo risks the demo itself. I gated rollouts with feature flags and tied collaboration flows to notifications and conversations, so new paths prove out before they scale.</p>
+              <h3>Booking</h3>
+              <p>Booking is the hardest system to get right, because a double-sell destroys trust instantly. The critical problem is always the same: two phones tap the same seat on a bad network, payment is slow to confirm, and the system has to hold inventory without ever getting stuck.</p>
+              <p>My rule: never complete a reservation before payment is verified. At <strong>Jet Express</strong>, across 30+ cities, I built the flow with Redis locks with expiration to hold the seat, idempotent events to survive retries, and async queues to carry confirmations without blocking the sale. For <strong>Govihari</strong>, where a boat has fixed capacity, I used reserve → pay → confirm, with failed or expired payments auto-cancelling and releasing the seat instead of leaving inventory stuck.</p>
+              <p>The same lifecycle protects money everywhere else. At <strong>KavooGo</strong>, I handled Stripe intents and checkout sessions with webhook and refund-status tracking so a retry resolves to the same transaction, never a new charge. For <strong>SRKAN</strong>, I applied it to donations on poor networks: verification, webhook-driven status, and receipts the donor can trust. For <strong>Legato</strong>, I gated rollouts with feature flags so new collaboration paths prove out before they scale. The impact is operational: no oversell at the gate, no stuck seats, no support tickets about money.</p>
               <button class="story-more" aria-expanded="false">See more</button>
             </div>
           </article>
 
           <article class="story" id="payment">
-            <p class="story-kicker">03</p>
             <div class="story-body collapsed">
-              <h3>Engineering Payment Systems You Can Trust</h3>
-              <p>For <strong>SRKAN</strong>, a donation platform serving communities with unreliable connectivity, I worked on PayU payment verification, webhook-driven donation status updates, and multi-currency transaction tracking. I also implemented receipt uploads for manual verification and automated emails for successful donations and SWIFT payment instructions.</p>
-              <p>For <strong>Govihari</strong>, a river-boat ticketing platform, I integrated Razorpay order creation and payment verification using server-side HMAC signature validation. Booking records were created within database sessions, connecting payment verification to the booking lifecycle. The flow also supported guest checkout, without requiring an account.</p>
-              <p>For <strong>Jet Express</strong>, an inter-city transportation platform operating across 30+ cities, I worked on payment processing with multiple gateway options, company-specific gateway selection, and idempotent webhook handling. A unique event record scoped to each company prevents the same webhook event from being processed repeatedly. Refunds use a queued workflow with retry limits, while expired or failed payments trigger booking cleanup and seat release.</p>
-              <p>For <strong>KavooGo</strong>, a rewards platform serving English- and French-speaking African markets, I fixed a Stripe API contract mismatch by supporting both the existing <code>campaignId</code> flow and a new direct-amount flow. The existing integration remained backward compatible. I also extended transaction status handling to support refunds and implemented webhook processing for successful payments, failed payments, completed checkout sessions, and refunded charges. Both mobile payment-intent and web checkout-session flows were supported.</p>
+              <h3>Payments</h3>
+              <p>Payments are where engineering depth turns directly into business trust. The critical problems repeat: gateways lie, webhooks arrive twice or not at all, users retry on bad networks, and every edge case touches real money.</p>
+              <p>I hold one rule: verify first, handle everything idempotently. At <strong>SRKAN</strong>, I built PayU verification, webhook-driven donation status, multi-currency tracking, receipt uploads for manual verification, and automated emails for confirmations and SWIFT instructions. For <strong>Govihari</strong>, I integrated Razorpay order creation with server-side HMAC validation, created bookings inside database sessions tied to the payment lifecycle, and supported guest checkout without an account.</p>
+              <p>At scale the same discipline prevents revenue loss. At <strong>Jet Express</strong>, I built multi-gateway processing with company-specific selection, unique event records per company to stop duplicate webhook processing, and queued refunds with retries plus automatic seat release on expired or failed payments. For <strong>KavooGo</strong>, I fixed a Stripe contract mismatch while keeping the existing <code>campaignId</code> flow backward compatible, added a direct-amount flow, and extended webhooks to cover success, failure, checkout completion, and refunds. The impact: every payment resolves to one truth, and finance never chases ghosts.</p>
               <button class="story-more" aria-expanded="false">See more</button>
             </div>
           </article>
 
           <article class="story" id="auth">
-            <p class="story-kicker">04</p>
             <div class="story-body collapsed">
-              <h3>Engineering Authentication Beyond Login</h3>
-              <p>For <strong>Jet Express</strong>, an inter-city transportation platform operating across 30+ cities, I worked on JWT-based authentication with company-level data isolation and role-specific access. The authentication middleware validates bearer tokens, checks revocation, loads the associated user, and attaches company context for downstream operations. Role-based Socket.IO rooms support real-time communication while keeping users organized by company and responsibility.</p>
-              <p>For <strong>SRKAN</strong>, I implemented a hierarchical role-based access system for administrative operations, separating super administrators, administrators, editors, and users through protected routes and reusable authorization middleware.</p>
-              <p>For <strong>Govihari</strong>, I integrated Firebase phone authentication for a boat-ticketing application where phone numbers served as the primary user identity. I also worked on persistent FCM token management, connecting registered devices with push-notification workflows.</p>
-              <p>For <strong>Legato</strong>, a musician collaboration platform, I integrated Better Auth through a custom Sequelize adapter for PostgreSQL, with Google and Apple sign-in and email OTP-based password recovery. Registration also triggered onboarding operations: creating the linked profile, provisioning Stream Chat identity, and assigning initial skills.</p>
-              <p>For <strong>KavooGo</strong>, a rewards platform operating across English- and French-speaking African markets, I worked on specialized authentication guards for users, partners, administrators, teams, and dashboards. Each guard established the appropriate access boundary for its route context. Token revocation checks ensured logged-out sessions could no longer be accepted.</p>
+              <h3>Authentication</h3>
+              <p>Authentication is never just login — it's how a dashboard learns to trust identity. The critical problems are isolation between tenants, roles that actually hold under real operations, and sessions that stay revoked once logged out.</p>
+              <p>I validate, isolate, then authorize on every request. At <strong>Jet Express</strong>, I built JWT authentication with company-level isolation — middleware that validates bearer tokens, checks revocation, loads the user, and attaches company context — plus role-based Socket.IO rooms so real-time traffic stays separated by company and responsibility. For <strong>SRKAN</strong>, I implemented hierarchical roles — super admin, admin, editor, user — through protected routes and reusable middleware.</p>
+              <p>Consumer identity brought different constraints. At <strong>Govihari</strong>, I integrated Firebase phone auth where the phone number is the primary identity, with persistent FCM token management tied to notification workflows. For <strong>Legato</strong>, I integrated Better Auth on a custom Sequelize adapter for PostgreSQL with Google and Apple sign-in and email OTP recovery, where registration also provisions the profile, Stream Chat identity, and initial skills. For <strong>KavooGo</strong>, I built separate guards for users, partners, admins, teams, and dashboards, each with its own access boundary and revocation checks. The impact is quiet but decisive: the right people see the right data, and nothing else.</p>
               <button class="story-more" aria-expanded="false">See more</button>
             </div>
           </article>
 
           <article class="story" id="dashboard">
-            <p class="story-kicker">05</p>
             <div class="story-body collapsed">
-              <h3>Engineering Dashboards for Complex Operations</h3>
-              <p>For <strong>SRKAN</strong>, a devotional platform with global community, I worked on admin dashboard utilities with program statistics, active branch filtering, date range filtering for donations, donation export to CSV/Excel, currency listing, and donation status tracking across pending, success, failed, and refunded states.</p>
-              <p>For <strong>Jet Express</strong>, an inter-city transportation platform operating across 30+ cities, I worked on a full BackOffice dashboard with dedicated slices for bookings, trips, fleet, users, routes, stations, cities, config, tenants, and subscriptions. Redux Toolkit with async thunks, role-based routing for admin, manager, staff, and platform_admin, KPIs with charts, live trips, recent bookings, payment summary, alerts, and today's stats. Centralized API client with 401 refresh, Socket.IO for live tracking, and tenant-scoped data by companyId.</p>
-              <p>For <strong>Govihari</strong>, a river-boat ticketing platform, I worked on booking data filtering by status, date, boat, and tour guide, cancelled bookings management with refund tracking, boat-wise reports with occupancy and revenue per boat, today's bookings view, tour guide assignments, and payment summary with charts and KPI tracking.</p>
-              <p>For <strong>KavooGo</strong>, a rewards platform serving English- and French-speaking African markets, I worked on a BackOffice dashboard with feature slices for users, campaigns, transactions, and notifications. Redux state management, API client with 401 refresh, RBAC-filtered navigation, analytics API data flow, Socket.IO real-time tracking, notification management, campaign filtering with location normalization, user-to-campaign matching display, and transaction status tracking.</p>
+              <h3>Dashboards</h3>
+              <p>Every app I ship needs the dashboard behind it — the screen where ops sees what the phones are doing. The critical problem is always complexity under pressure: bookings, fleet, money, and people changing at once, with different roles needing different truths from the same data.</p>
+              <p>I slice per domain with centralized auth, refresh, and real-time feeds. At <strong>Jet Express</strong>, I built a full BackOffice — bookings, trips, fleet, users, routes, stations, cities, tenants, subscriptions — with role-based routing for admin, manager, staff, and platform_admin, live trips and KPIs over Socket.IO, everything tenant-scoped by companyId.</p>
+              <p>The same pattern scales down to focused operations. At <strong>SRKAN</strong>, I built program stats, branch and date-range filtering, donation export to CSV/Excel, currency listing, and status tracking across pending, success, failed, and refunded. For <strong>Govihari</strong>, I built filtering by status, date, boat, and guide, cancelled bookings with refund tracking, boat-wise occupancy and revenue, today's view, and payment KPIs. For <strong>KavooGo</strong>, I built slices for users, campaigns, transactions, and notifications with RBAC-filtered navigation and user-to-campaign matching display. The impact: a founder sees the business in one screen, and staff act without asking engineering.</p>
               <button class="story-more" aria-expanded="false">See more</button>
             </div>
           </article>
 
           <article class="story" id="push">
-            <p class="story-kicker">06</p>
             <div class="story-body collapsed">
-              <h3>Engineering Push Notifications That Survive the OS</h3>
-              <p>For <strong>SRKAN</strong>, a devotional platform built for villages with poor networks, I worked on local scheduled reminders with expo-notifications. A scheduler provider rebuilds the plan from programs and daily schedules, capped at 60 items for iOS limits, 6 weeks ahead, with 10-minute lead time. Android channel setup, permission handling with iOS provisional support, Expo Go guard, and multilingual titles. No server dependency — reminders work with zero signal.</p>
-              <p>For <strong>Jet Express</strong>, an inter-city transportation platform operating across 30+ cities, I worked on a full FCM push pipeline with firebase-admin sendEachForMulticast. Device registration with token arrays, invalid-token pruning, and preference checks. Queue fan-out with broadcast to all customers and scoped sends to booked customers by trip or bus, per-user en/fr localization, DB persistence, Socket.IO emit, and push with event routing data.</p>
-              <p>For <strong>Govihari</strong>, a river-boat ticketing platform, I worked on FCM via react-native-firebase messaging. Token fetch and upsert to /save-token on launch and after OTP verification, foreground onMessage alerts, background handlers, and permission requests. Backend with /save-token upsert, /get-tokens, and /send-notification via admin.messaging().sendEach across stored user tokens.</p>
-              <p>For <strong>KavooGo</strong>, a rewards platform serving English- and French-speaking African markets, I worked on Expo Push with SMS fallback. Encrypted push-token storage, ExponentPushToken validation, ticket-status handling, DeviceNotRegistered cleanup, push-first then Infobip SMS fallback, and DB persistence with read/sent tracking and ticket IDs.</p>
-              <p>For <strong>Legato</strong>, a musician collaboration platform, I worked on dual push via GetStream and Firebase. Follow and message flows send email plus GetStream push plus Firebase push. Mobile with background handler updating badge from unreadCount, tap handling via onNotificationOpenedApp and getInitialNotification deep-linking to ActiveChats, and badge sync.</p>
+              <h3>Notification System</h3>
+              <p>Push is a delivery system, not a send call. The critical problems are brutal and consistent: the OS will kill the app, tokens rotate and die, iOS caps what you can schedule, and a message that arrives late might as well never have been sent.</p>
+              <p>I assume zero signal and a dead app, then build up. At <strong>SRKAN</strong>, built for villages with poor networks, I built local scheduled reminders with expo-notifications, rebuilding the plan from programs and schedules, capped at 60 items for iOS limits, 6 weeks ahead, 10-minute lead time, with Android channels, provisional iOS permissions, and multilingual titles. No server needed. For <strong>Jet Express</strong>, I built a full FCM pipeline with sendEachForMulticast, token arrays with invalid-token pruning and preference checks, queue fan-out to all customers or scoped to a trip or bus, per-user en/fr localization, DB persistence, and Socket.IO emit with routing data.</p>
+              <p>Other products needed different fallbacks for the same guarantee. At <strong>Govihari</strong>, I built token fetch and upsert on launch and after OTP, foreground alerts, background handlers, and backend send across stored tokens. For <strong>KavooGo</strong>, I built Expo Push with encrypted token storage, validation, ticket-status handling, DeviceNotRegistered cleanup, and Infobip SMS fallback when push can't deliver, with read/sent tracking. For <strong>Legato</strong>, I built dual push via GetStream and Firebase with email alongside, badge sync from unreadCount, and deep-links to the exact chat on tap. The impact: the message still arrives after the OS has killed the app — and that is what brings users back on day 30.</p>
               <button class="story-more" aria-expanded="false">See more</button>
             </div>
           </article>
@@ -121,51 +120,41 @@
       </div>
     </section>
 
-    <section class="engineering" id="engineering">
-      <div class="wrap">
-        <p class="eyebrow">Mobile engineering</p>
-        <h2 class="section-title">The phone is a hostile environment. The product has to survive it.</h2>
-        <p class="section-lede">Mobile is not a smaller website. It is a contract with two stores, two runtimes, a hostile OS, and a user who will not wait. <strong>Built with founders in the USA, India, Canada, and across Africa</strong> — same phone hostility, different constraints.</p>
-
-        <div class="eng-list">
-          <article class="eng">
-            <h3>Your launch won't slip in review</h3>
-            <p>SRKAN and Legato live on both stores — Legato in 9 months with zero crashes at demo, via Expo SDK upgrades, EAS staged rollouts, and feature flags.</p>
-          </article>
-          <article class="eng">
-            <h3>Works where the network doesn't</h3>
-            <p>Users outside the capital still pay. SRKAN works with zero signal, Jet Express sells offline across 30+ cities and syncs per tenant, Govihari totals on-device to match the server, KavooGo's earning loop can't double-pay on retry.</p>
-          </article>
-          <article class="eng">
-            <h3>Runs on the phones users actually own</h3>
-            <p>Your rating won't die on 2GB RAM. Thumbnail caching, image compression with aspect handling, VirtualizedList safeguards, and flows tuned for low-end devices and village networks.</p>
-          </article>
-          <article class="eng">
-            <h3>Survives the OS killing it</h3>
-            <p>Day-30 retention survives the real world. Reading-position restore, token lifecycle with pruning, badge sync with deep-links to the exact ticket or chat, crash fixes with Sentry watching.</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
     <section class="writing" id="writing">
-      <div class="wrap writing-row">
-        <div>
-          <p class="eyebrow">Writing</p>
-          <h2 class="section-title">Notes on systems that have to be correct.</h2>
-          <p class="section-lede">Short essays for people who ship products — not a changelog of tickets.</p>
-        </div>
-        <a class="text-link" href="blog.html">Read the blog</a>
+      <div class="wrap">
+        <p class="eyebrow">Writing</p>
+        <h2 class="section-title">Notes on systems that have to be correct.</h2>
+          <p class="section-lede">Essays for people who ship products — not a changelog of tickets.</p>
+        <ul class="post-list">
+          <li>
+            <a href="blog/a-seat-is-a-lock.html">
+              <time datetime="2026-09-12">Sep 2026</time>
+              <h2>A seat is a lock</h2>
+            </a>
+          </li>
+          <li>
+            <a href="blog/if-it-only-works-while-open.html">
+              <time datetime="2026-07-03">Jul 2026</time>
+              <h2>If it only works while open, it isn’t push</h2>
+            </a>
+          </li>
+          <li>
+            <a href="blog/search-is-ranking.html">
+              <time datetime="2026-04-18">Apr 2026</time>
+              <h2>Search is ranking, not a text box</h2>
+            </a>
+          </li>
+        </ul>
       </div>
     </section>
 
     <section class="contact" id="contact">
       <div class="wrap">
-        <p class="eyebrow">Around</p>
+        <p class="eyebrow">Contact</p>
         <h2 class="section-title">Mashrafi Ahnam Shafin</h2>
         <p class="section-lede">Mobile Product Developer. Hard systems that have to be correct.</p>
         <div class="contact-links">
-          <a href="mailto:mashrafiahnam1@gmail.com">mashrafiahnam1@gmail.com</a>
+          <a class="contact-email" href="mailto:mashrafiahnam1@gmail.com">mashrafiahnam1@gmail.com</a>
         </div>
       </div>
     </section>

@@ -1,9 +1,10 @@
 :root {
-  --bg: #fff;
+  --bg: #FDFBF7;
   --ink: #111;
   --muted: #555;
   --faint: #888;
   --line: #eee;
+  --accent: #e3873c;
   --font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --measure: 42rem;
   --page: 70rem;
@@ -28,7 +29,7 @@ code {
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   font-size: 0.9em;
 }
-::selection { background: var(--ink); color: var(--bg); }
+::selection { background: var(--accent); color: #fff; }
 
 .wrap {
   max-width: var(--page);
@@ -40,7 +41,7 @@ code {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba(253, 251, 247, 0.92);
 }
 
 .nav-inner {
@@ -57,6 +58,7 @@ code {
 
 .nav-links {
   display: flex;
+  align-items: center;
   gap: 24px;
 }
 
@@ -69,6 +71,17 @@ code {
 .nav-links a[aria-current="page"] {
   color: var(--ink);
 }
+
+.nav-cta {
+  background: var(--ink);
+  color: var(--bg) !important;
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.nav-cta:hover { opacity: 0.85; }
 
 .hero { padding: 80px 0 96px; }
 
@@ -109,21 +122,18 @@ h1 {
 }
 
 .hero-photo {
-  position: relative;
-  overflow: hidden;
   margin: 0;
-  width: 70%;
+  width: 100%;
+  max-width: 380px;
   justify-self: end;
-  aspect-ratio: 839 / 960;
+  aspect-ratio: 4 / 5;
+  border-radius: 12px;
+  overflow: hidden;
 }
 
 .hero-photo img {
-  position: absolute;
-  left: 0;
   width: 100%;
-  height: 166.6667%;
-  top: -33.3333%;
-  max-width: none;
+  height: 100%;
   object-fit: cover;
   object-position: center;
 }
@@ -167,10 +177,10 @@ h1 {
 
 .story {
   display: grid;
-  grid-template-columns: 3rem 1fr;
-  gap: 16px;
+  grid-template-columns: 1fr;
   padding: 40px 0;
   border-top: 1px solid var(--line);
+  scroll-margin-top: 72px;
 }
 
 .story:last-child { padding-bottom: 0; }
@@ -194,16 +204,20 @@ h1 {
 
 .see-more:hover { color: var(--muted); }
 
-.story-kicker {
-  font-size: 15px;
+.work-index {
+  font-size: 16px;
   color: var(--faint);
-  padding-top: 3px;
+  margin: -24px 0 24px;
 }
 
+.work-index a { color: var(--muted); }
+
+.work-index a:hover { color: var(--ink); }
+
 .story h3 {
-  font-size: 15px;
-  font-weight: 500;
-  color: var(--faint);
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--ink);
   margin-bottom: 8px;
 }
 
@@ -221,7 +235,17 @@ h1 {
   margin-bottom: 12px;
 }
 
+.story-body p:first-of-type { color: var(--ink); }
+
 .story-body.collapsed p:nth-of-type(n+3) { display: none; }
+
+.story-body.collapsed p:nth-of-type(2) {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
 
 .story-more {
   display: inline-block;
@@ -258,15 +282,6 @@ h1 {
   max-width: 28rem;
 }
 
-.writing-row {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 32px;
-}
-
-.writing .section-lede { margin-bottom: 0; }
-
 .text-link {
   font-size: 16px;
   color: var(--ink);
@@ -295,6 +310,12 @@ h1 {
 }
 
 .contact-links a:hover { color: var(--ink); }
+
+.contact-email {
+  font-size: 22px !important;
+  font-weight: 600;
+  color: var(--ink) !important;
+}
 
 .footer { padding: 24px 0 40px; }
 
@@ -355,6 +376,17 @@ h1 {
 
 .prose p:last-child { margin-bottom: 0; }
 
+.prose h2 {
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+  color: var(--ink);
+  margin: 1.75em 0 0.5em;
+}
+
+.prose > h2:first-child { margin-top: 0; }
+
 @media (max-width: 900px) {
   .wrap { padding: 0 24px; }
 
@@ -367,7 +399,7 @@ h1 {
 
   .hero-copy { max-width: none; }
 
-  .hero-photo { justify-self: start; }
+  .hero-photo { justify-self: start; max-width: 300px; }
 
   .work, .engineering, .writing, .contact, .page {
     padding: 56px 0;
@@ -378,11 +410,6 @@ h1 {
     gap: 32px;
   }
 
-  .writing-row {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
   .story {
     grid-template-columns: 1fr;
     gap: 4px;
@@ -391,8 +418,22 @@ h1 {
 }
 
 @media (max-width: 640px) {
+  body { font-size: 17px; }
+  h1 { font-size: 30px; }
+  .section-title { font-size: 24px; }
   .nav-inner { height: 56px; }
-  .nav-links { gap: 16px; }
+  .nav-name {
+    font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+  }
+  .nav-links { gap: 12px; flex-shrink: 0; }
+  .nav-links a { font-size: 14px; }
+  .nav-cta { padding: 6px 12px; }
   .footer-inner { flex-direction: column; }
   .section-lede { margin-bottom: 32px; }
+  .contact-email { overflow-wrap: anywhere; }
+  .work-index { line-height: 2; }
 }
