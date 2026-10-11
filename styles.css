@@ -74,7 +74,7 @@ code {
 
 
 
-.hero { padding: 80px 0 96px; }
+.hero { padding: 100px 0 120px; }
 
 .hero-grid {
   display: grid;
@@ -139,7 +139,7 @@ h1 {
 .writing,
 .contact,
 .page {
-  padding: 80px 0;
+  padding: 100px 0;
   scroll-margin-top: 64px;
 }
 
@@ -164,7 +164,7 @@ h1 {
 .section-lede {
   color: var(--muted);
   max-width: 36rem;
-  margin-bottom: 48px;
+  margin-bottom: 64px;
 }
 
 .work .section-title {
@@ -172,7 +172,7 @@ h1 {
 }
 
 .story {
-  padding: 40px 0;
+  padding: 60px 0;
   border-top: 1px solid var(--line);
   scroll-margin-top: 72px;
   max-width: var(--measure);
