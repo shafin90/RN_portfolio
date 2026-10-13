@@ -79,12 +79,12 @@ code {
 
 
 
-.hero { padding: 100px 0 120px; }
+.hero { padding: 160px 0 184px; }
 
 .hero-grid {
   display: grid;
   grid-template-columns: minmax(18rem, 1fr) minmax(280px, 1.15fr);
-  gap: 40px 48px;
+  gap: 48px 64px;
   align-items: center;
 }
 
@@ -96,9 +96,12 @@ code {
 }
 
 .eyebrow {
-  font-size: 15px;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
   color: var(--faint);
-  margin-bottom: 12px;
+  margin-bottom: 20px;
 }
 
 .eyebrow a { color: var(--faint); }
@@ -111,6 +114,15 @@ h1 {
   line-height: 1.25;
   margin-bottom: 16px;
 }
+
+.hero h1 {
+  font-size: clamp(40px, 5vw, 56px);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  margin-bottom: 28px;
+}
+
+.hero .lede { font-size: 19px; }
 
 .lede {
   color: var(--muted);
@@ -147,10 +159,42 @@ h1 {
 }
 
 .case-study {
-  padding: 80px 0;
+  padding: 136px 0;
   border-top: 1px solid var(--line);
   scroll-margin-top: 64px;
 }
+
+#case-study { background: #FAF3EC; }
+
+.writing {
+  padding: 136px 0 160px;
+  border-top: 1px solid var(--line);
+  scroll-margin-top: 64px;
+}
+
+.case-study .section-title {
+  font-size: 32px;
+  letter-spacing: -0.02em;
+}
+
+.writing .section-title { font-size: 24px; }
+
+.writing .post-list a { padding: 20px 0; }
+
+.writing .post-list h2 { font-size: 20px; }
+
+.see-all {
+  margin-top: 28px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.see-all a {
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 2px;
+}
+
+.see-all a:hover { color: var(--muted); }
 
 .work,
 .engineering,
@@ -166,7 +210,7 @@ h1 {
   letter-spacing: -0.015em;
   line-height: 1.3;
   max-width: 34rem;
-  margin-bottom: 12px;
+  margin-bottom: 24px;
 }
 
 .section-lede {
@@ -175,12 +219,16 @@ h1 {
   margin-bottom: 64px;
 }
 
+.work {
+  padding: 128px 0 144px;
+}
+
 .work .section-title {
-  margin-bottom: 40px;
+  margin-bottom: 48px;
 }
 
 .story {
-  padding: 80px 0;
+  padding: 88px 0;
   border-top: 1px solid var(--line);
   scroll-margin-top: 72px;
   max-width: var(--measure);
@@ -210,7 +258,8 @@ h1 {
 .work-index {
   font-size: 16px;
   color: var(--faint);
-  margin: -24px 0 24px;
+  line-height: 2;
+  margin: 0 0 40px;
 }
 
 .work-index a { color: var(--muted); }
@@ -221,7 +270,7 @@ h1 {
   font-size: 20px;
   font-weight: 600;
   color: var(--ink);
-  margin-bottom: 8px;
+  margin-bottom: 12px;
 }
 
 .story-head {
@@ -235,12 +284,13 @@ h1 {
 .story-body p {
   color: var(--muted);
   max-width: var(--measure);
-  margin-bottom: 12px;
+  margin-bottom: 20px;
+  line-height: 1.75;
 }
 
 .story-more {
   display: inline-block;
-  margin-top: 4px;
+  margin-top: 8px;
   background: none;
   border: none;
   padding: 0 0 2px;
@@ -300,7 +350,7 @@ h1 {
 
 .contact .section-lede a:hover { color: var(--ink); }
 
-.footer { padding: 24px 0 40px; }
+.footer { padding: 48px 0 72px; }
 
 .footer-inner {
   display: flex;
@@ -348,7 +398,7 @@ h1 {
 
 .post-list a:hover h2 { color: var(--muted); }
 
-.post { max-width: 40rem; }
+.post .wrap { max-width: 40rem; }
 
 .prose { margin-top: 36px; }
 
@@ -373,7 +423,7 @@ h1 {
 @media (max-width: 900px) {
   .wrap { padding: 0 24px; }
 
-  .hero { padding: 48px 0 64px; }
+  .hero { padding: 80px 0 96px; }
 
   .hero-grid {
     grid-template-columns: 1fr;
@@ -395,10 +445,16 @@ h1 {
     gap: 32px;
   }
 
+  .work { padding: 80px 0; }
+
+  .work .section-title { margin-bottom: 32px; }
+
+  .work-index { margin-bottom: 32px; }
+
   .story {
     grid-template-columns: 1fr;
     gap: 4px;
-    padding: 48px 0;
+    padding: 56px 0;
   }
 }
 
@@ -406,6 +462,10 @@ h1 {
   body { font-size: 17px; }
   h1 { font-size: 28px; }
   .section-title { font-size: 22px; }
+  .case-study .section-title { font-size: 24px; }
+  .writing .section-title { font-size: 20px; }
+  .hero .lede { font-size: 17px; }
+  .writing, .case-study { padding: 88px 0; }
   .nav-inner { height: 56px; }
   .nav-name {
     font-size: 14px;
