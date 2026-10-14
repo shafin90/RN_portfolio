@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Every request your app sends may arrive more than once, and nobody will know. Why a second charge is the end of customer trust, and what it costs to build the guarantee instead of hoping.">
+  <title>A retry must find the first result — Mashrafi Ahnam Shafin</title>
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+
+  <header class="nav">
+    <div class="wrap nav-inner">
+      <a href="../index.html" class="nav-name">Mashrafi Ahnam Shafin</a>
+      <nav class="nav-links">
+          <a href="../blog.html">Blog</a>
+          <a href="../case-studies.html">Case Studies</a>
+          <a href="../expertise.html">Expertise</a>
+          <a href="../contact.html">Contact</a>
+        </nav>
+    </div>
+  </header>
+
+  <main id="top">
+
+    <article class="page post">
+      <div class="wrap">
+        <p class="eyebrow"><a href="../blog.html">Blog</a> · Payments · 6 min read</p>
+        <h1 class="section-title">A retry must find the first result</h1>
+        <div class="prose">
+          <p>There is a fact about mobile networks that should be printed at the top of every requirements template. Any request your app sends may be executed more than once, and neither the user nor the app will know. Not sometimes, on purpose, during a migration. Routinely, as ordinary traffic, because timeouts lie.</p>
+          <p>The sequence is always the same and it takes about four seconds. The user taps pay. The request reaches your server and succeeds. The response dies somewhere on the way back, which the app cannot distinguish from the request having failed. The screen says failed. The user taps again. On a weak connection this is not a catastrophe to be handled later. It is Tuesday.</p>
+          <p>So somewhere in your system there is a customer who has been charged twice for one seat, or charged twice for one donation, or paid out twice for one survey. Your logs will show two successful payments. Your provider will show two successful payments. Every system you own will agree that this is correct, because from where each of them sits, it was.</p>
+
+          <h2>The business is making this promise, not the engineer</h2>
+          <p>Here is the part that gets argued about in the wrong room. A retry can never charge twice is not an implementation detail for an engineer to sort out later. It is a promise the business makes to its customers, and it belongs in the requirements document in the same words the customer would use, because it will eventually conflict with something else the business wants.</p>
+          <p>It will conflict. Almost always it conflicts with a nicer screen. The straightforward thing to do on a duplicate tap is to show an error, because an error is honest about the fact that something went wrong. The customer-friendly thing to do is show progress, and let the user keep tapping. If the promise is that a retry can never double-charge, then the progress screen wins and the error screen has to go, and somebody senior has to sign that trade-off rather than discovering it in production.</p>
+          <p>The same argument applies to a seat. Whether a second tap on the last seat shows a clear no or quietly fails, and whether the first payment is refunded immediately or after a support conversation, is a decision about how a bad day is handled in front of a customer. It is worth deciding in advance, while nobody is standing at a dock watching it.</p>
+
+          <h2>What it actually costs to build</h2>
+          <p>The guarantee itself is not expensive, and that is the part that surprises people. Three pieces, and none of them require a distributed system.</p>
+          <p><strong>The identity of the operation.</strong> Every attempt carries a key generated once, on the device, before the first tap. A donation carries its intent identifier. A booking carries the key that produced it. That key is what lets the second tap be recognised as the same act rather than a new one, and it has to be created before the request goes out, because after the request there is no safe moment left.</p>
+          <p><strong>The rule for repetition.</strong> When a key arrives that has already been used, the server returns the original outcome instead of doing the work again. A repeated donation returns the first donation, already recorded, with its receipt. A repeated seat booking returns the seat that was already held. This is a lookup before it is an insert, and it needs a database constraint underneath it, because an application-level check is a race condition with good manners.</p>
+          <p><strong>The customer's view of a collision.</strong> What the screen says when the payment already succeeded, when the seat is already held by this same person, when the reward is already recorded. This is the part most often skipped, and skipping it produces something worse than a duplicate charge, which is a duplicate charge combined with an error message and a customer who now thinks your company has no idea what happened to their money.</p>
+          <p>The expensive work is not the transaction. It is deciding that the first press is the authoritative one and that the screen should say so calmly rather than apologising.</p>
+
+          <h2>It is not only payments</h2>
+          <p>The same guarantee protects anything that moves money, inventory, or a promise. I have needed it in situations that have nothing to do with a card.</p>
+          <p>A payment provider that delivers the same webhook twice, out of order, hours later, after you have already marked the transaction failed. A wallet payout where a mobile money transfer succeeds and the confirmation never comes back, so the user taps again and the row is inserted a second time. A row-level lock that deducts, holds a pending state, calls the provider, and compensates in a second transaction if the provider refuses, so that a double tap cannot produce two transfers. A reward where the user completes a survey and three separate signals report it, all of which converge on one payout rather than three.</p>
+          <p>In every case the mechanism is identical and the reasoning is identical. The operation has an identity, the identity resolves to one outcome, and the user is shown that outcome rather than a fresh attempt.</p>
+
+          <h2>Where it gets uncomfortable</h2>
+          <p>Idempotency is straightforward right up to the moment it intersects with something else, and I have learned most of what I know about it from the places it collides.</p>
+          <p>The first collision is refunds, because refunds are where retry logic goes to die. A refund request needs its own identity and its own status, a repeated refund request resolves to the same refund record rather than a second payment out, a partial refund has to be either supported or explicitly declared out of scope, and the refund has to change the state of the booking it belongs to. A refunded booking is not a confirmed booking with a footnote, and a support agent reading two screens should never have to guess which one is current.</p>
+          <p>The second collision is expiry. A key protects against repetition, but a hold has a clock, and a key that can be replayed forever is a key that can resurrect an expired hold. Somewhere the system has to decide whether a retry arriving after the hold died is a retry, which should return the original failure, or a new attempt, which should be treated as new. There is no universally correct answer and it depends on whether your customer would rather be told nothing happened or be sold the seat they were trying to buy.</p>
+          <p>The third is the failure nobody sees. Duplicate charges are reported immediately, because the customer is looking at their bank statement and they are angry. Duplicate payouts are reported later, sometimes after the money has been withdrawn. Duplicate donations are reported later still, because the donor has no reason to check twice. By the time the pattern is visible to you, it may have run for a month across every device on a bad connection, and you will see it as a strange cluster of complaints rather than as the retry pattern it actually is. That is worth logging for, deliberately, because the alternative is waiting to be told.</p>
+
+          <h2>The question to ask your team</h2>
+          <p>If your app moves money, holds inventory, or promises a reward, ask whoever built it what happens when the same person presses the same button twice on a bad connection. Not what is supposed to happen. What does happen.</p>
+          <p>If the answer is a description of the intended flow rather than a description of the code path, you have a promise on your website that your backend has not agreed to yet.</p>
+        </div>
+        <p class="see-all"><a href="../blog.html">&larr; All notes</a></p>
+      </div>
+    </article>
+
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer-inner">
+      <span>© 2026 Mashrafi Ahnam Shafin</span>
+      <span>Mobile Product Developer</span>
+    </div>
+  </footer>
+
+</body>
+</html>
