@@ -376,7 +376,33 @@ h1 {
 
 .post-list li + li { border-top: 1px solid var(--line); }
 
-.post-list a { display: block; padding: 28px 0; }
+.post-list a {
+  display: block;
+  position: relative;
+  padding: 28px 16px;
+  margin: 0 -16px;
+  border-radius: 6px;
+  transition: background-color 0.25s ease;
+}
+
+.post-list a::after {
+  content: "\2192";
+  position: absolute;
+  right: 16px;
+  top: 26px;
+  font-size: 18px;
+  color: var(--faint);
+  opacity: 0;
+  transform: translateX(-6px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.post-list a:hover { background-color: rgba(17, 17, 17, 0.025); }
+
+.post-list a:hover::after {
+  opacity: 1;
+  transform: translateX(0);
+}
 
 .post-list time {
   display: block;
@@ -395,7 +421,7 @@ h1 {
 
 .post-list p {
   color: var(--muted);
-  max-width: 44rem;
+  max-width: 42rem;
 }
 
 .post-list a:hover h2 { color: var(--muted); }
@@ -406,6 +432,7 @@ h1 {
 
 @media (prefers-reduced-motion: reduce) {
   .post-list h2 { transform: none !important; }
+  .post-list a::after { transform: none !important; }
 }
 
 .post .wrap { max-width: 46rem; }
