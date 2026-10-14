@@ -96,22 +96,17 @@
     <section class="case-study" id="jetexpress">
       <div class="wrap">
         <p class="eyebrow">Case Study</p>
-        <h2 class="section-title">JetExpress — Inter-city bus booking, 30+ cities, per-tenant sync</h2>
+        <h2 class="section-title">JetExpress — Inter-city buses, many companies, one truth each</h2>
         <div class="story-body">
-          <h3>The constraint</h3>
-          <p>30+ cities, multi-tenant (each bus company is a tenant). Two phones tap the same seat on a bad network — must never double-sell. Offline sales across cities, sync per tenant. Multi-gateway payments per company. Real-time tracking for live trips.</p>
-
-          <h3>Architecture decisions</h3>
-          <p><strong>Seat lock with Redis + idempotent events.</strong> Reserve creates Redis lock with TTL (seat + departure key). Idempotent event log (unique event ID per company) records every state transition. Async queue carries confirmations, receipts, notifications — sale path never blocks on them. Double-tap on same seat: second request hits existing lock, gets immediate "taken" response.</p>
-
-          <p><strong>Per-tenant offline sync.</strong> Each company's data isolated by <code>companyId</code> in every query, index, cache key, queue. Offline sales write to local SQLite (WatermelonDB) with pending sync flag. Sync worker pulls pending, batches by company, pushes to API with company-scoped auth token. Conflict resolution: server wins on seat state; client re-fetches and re-renders. One company's flash sale never starves another's queue.</p>
-
-          <p><strong>Multi-gateway per company.</strong> Each company configures its own gateway (PayU, Razorpay, Stripe, mobile money). Order creation routes to correct gateway config. Webhook handler verifies signature per-gateway, dedups via company-scoped event ID. Refunds queued with retry limits; exhausted retries land in dead-letter for ops.</p>
-
-          <p><strong>Real-time tracking via Socket.IO.</strong> Live trip location broadcast to company-scoped rooms. Admin dashboard sees all companies; company admin sees only their trips. KPIs (bookings, revenue, occupancy) computed per company in materialized views, refreshed per sync cycle.</p>
-
-          <h3>Result</h3>
-          <p>No double-sells across 30+ cities. Offline sales sync cleanly per tenant. Multi-gateway per company without code branching. Real-time ops visibility at scale.</p>
+          <p>JetExpress is where I learned a bus company closes its own day.</p>
+          <p>Many companies, many cities, sellers with weak signal, two phones on one seat. Each company counts its own money, seats, and trips. My part was five surfaces — backend, passenger app, staff app, dashboard, website — that agree on seat, money, time, and who may touch what.</p>
+          <p>I start from the timetable. Trips lead from routes, crews ride with fleets rather than typed names, and a driver's day derives from rotation — so a driver change never orphans a trip. Stops can switch off individually with fares snapshotted at booking and an alight gate that refuses what was never sold. When crew is missing, all gaps report at once instead of the first only. Assignment mistakes surface at creation, not at departure.</p>
+          <p>Days stay honest to the world clock. Day filters pin to the shared day so a host in another zone never hides today's trips. Cities resolve past accents and case and return every candidate instead of guessing one. Responses refuse caching where a stale replay once arrived as an empty list — the app now fails loudly on emptiness instead of rendering silence.</p>
+          <p>Identity fits returners. The code received at sign-up stays as the permanent code, so a known traveler signs in by typing it with no message, and a forgotten one receives a fresh code by message that replaces it. Live codes and saved hashes both verify, attempts count toward lockout, tokens never ride back in responses, numbers normalize to world format with sending limits and quiet periods. The vendor path moved from device auth to server messages without breaking a single traveler.</p>
+          <p>Money and seat move together or not at all. Orders refuse amounts that disagree and malformed references without throwing. Fulfillment releases the seat on failure. Abandoned checkouts sweep on expiry. A paid booking that cannot complete refunds by itself, with retries that know their method, partial accounting, audit, and notice — and the payer's number kept as reported. The status poll stays authoritative, so closing the browser is never counted as failure. Each provider generation replaced the last down the same guarded path.</p>
+          <p>Paper tickets get a human path. A typed number opens a verification request, approval stays admin-only, and reports narrow by that verification state or set aside a category entirely. Content and theme stay per company, so one house never dresses another's storefront.</p>
+          <p>Booking survives the field. Passenger sales, details, and profile persist offline and rejoin in turn per company, with the server deciding clashes and the phone re-rendering quietly. Inspectors scan faster with their own verification tab and no prefilled secrets. Timeouts, render crashes, and silent token failures are handled instead of swallowed. Trip notices arrive localized over personal sockets, and dashboard mail moved to a proper sender with the push config traveling with deploys.</p>
+          <p>What stayed with me: route first, fleet with crew, day by world clock, code that remembers returners, money with its seat, paper with its approver, offline that rejoins per house. Every company sees only its truth — and trusts it at closing.</p>
         </div>
       </div>
     </section>
