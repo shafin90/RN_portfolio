@@ -385,23 +385,38 @@ h1 {
   transition: background-color 0.25s ease;
 }
 
+.post-list a::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 20px;
+  bottom: 20px;
+  width: 2px;
+  background: var(--accent);
+  transform: scaleY(0);
+  transition: transform 0.25s ease;
+}
+
 .post-list a::after {
   content: "\2192";
   position: absolute;
   right: 16px;
-  top: 26px;
+  top: 24px;
   font-size: 18px;
   color: var(--faint);
-  opacity: 0;
+  opacity: 0.45;
   transform: translateX(-6px);
-  transition: opacity 0.25s ease, transform 0.25s ease;
+  transition: opacity 0.25s ease, transform 0.25s ease, color 0.25s ease;
 }
 
-.post-list a:hover { background-color: rgba(17, 17, 17, 0.025); }
+.post-list a:hover { background-color: rgba(17, 17, 17, 0.04); }
+
+.post-list a:hover::before { transform: scaleY(1); }
 
 .post-list a:hover::after {
   opacity: 1;
   transform: translateX(0);
+  color: var(--accent);
 }
 
 .post-list time {
@@ -433,6 +448,7 @@ h1 {
 @media (prefers-reduced-motion: reduce) {
   .post-list h2 { transform: none !important; }
   .post-list a::after { transform: none !important; }
+  .post-list a::before { transform: none !important; }
 }
 
 .post .wrap { max-width: 46rem; }
