@@ -39,12 +39,11 @@
     <section class="case-study" id="case-study">
       <div class="wrap">
         <p class="eyebrow">Featured case study</p>
-        <h2 class="section-title">Shipping Legato in 9 months</h2>
+        <h2 class="section-title">Legato — where I learned to hold a product calm</h2>
         <div class="story-body">
-          <p><strong>Legato</strong>, a musician collaboration platform, needed iOS and Android apps live in 9 months for an investor demo: sign-in with Google and Apple, profiles with skills, discovery by name, skill, and proximity, and collaboration flows wired into chat and push notifications.</p>
-          <p>I own both sides — the Expo client and the API behind it — so mobile, backend, and dashboard never disagree.</p>
-          <p>The risk was the demo itself — one crash or one broken rollout in front of investors. I kept releases safe with Expo SDK upgrades, EAS staged rollouts, and feature flags, so unfinished collaboration paths never reached users before they proved out. Identity went through Better Auth on a custom Postgres adapter, with registration provisioning the profile, Stream Chat identity, and initial skills in one pass. Notifications went dual-channel, GetStream plus Firebase, with badge counts synced and taps deep-linking to the exact chat.</p>
-          <p>Result: live on both stores, zero crashes at demo. The same discipline runs in my other products: <strong>SRKAN</strong> works with zero signal, <strong>Jet Express</strong> sells offline across 30+ cities and syncs per tenant, <strong>Govihari</strong> totals on-device to match the server exactly, and <strong>KavooGo's</strong> earning loop is idempotent so a retry can never double-pay.</p>
+          <p><strong>Legato</strong>, a musician collaboration platform — profiles, discovery, follow, block, groups, chat, push. Small US team, both stores. My part was the phone as it is, and the server agreeing with it.</p>
+          <p>I kept search honest — one query ranked, faces first then distance, no second sort on the phone. I shipped matching to Explore behind a flag — scored apart from search, precomputed, reads cheap, with viewed, dismissed, and refresh paths. Follow notifies without risking the follow. Block hides everywhere. Taps open that exact thread, back intact.</p>
+          <p>State writes moved into actions. Lists unified with guards. Releases kept shippable through major upgrades with crash reporting from the start. The product held — ordered, scored, notified, back intact.</p>
         </div>
         <p class="see-all"><a href="case-studies.html">See all case studies →</a></p>
       </div>

@@ -26,22 +26,18 @@
     <section class="case-study" id="legato">
       <div class="wrap">
         <p class="eyebrow">Case Study</p>
-        <h2 class="section-title">Legato — Musician collaboration platform, 9 months to investor demo</h2>
+        <h2 class="section-title">Legato — Musician collaboration platform, MVP to production</h2>
         <div class="story-body">
-          <h3>The constraint</h3>
-          <p>iOS and Android apps live on both stores in 9 months for an investor demo. Sign-in with Google and Apple, profiles with skills, discovery by name, skill, and proximity, collaboration flows wired into chat and push notifications. One crash in the demo room and the round collapses.</p>
-
-          <h3>Architecture decisions</h3>
-          <p><strong>Expo + EAS for release velocity.</strong> Expo SDK upgrades kept the runtime current without native divergence. EAS staged rollouts limited blast radius — 5%, 25%, 100% — so a regression caught at 5% never reached the demo device. Feature flags gated every unfinished collaboration path; the demo build only included flagged-on code paths, each proven on staging first.</p>
-
-          <p><strong>Identity as a single write.</strong> Better Auth on a custom Postgres adapter (not the default SQLite) meant registration was one transaction: create user, provision profile, create Stream Chat identity, assign initial skills. No orphan profiles, no race between auth and chat. Google and Apple sign-in flowed through the same adapter; email OTP recovery reused the same session store.</p>
-
-          <p><strong>Dual-channel notifications with deep-link integrity.</strong> GetStream for in-app chat events, Firebase for background push. Both channels emitted the same event schema: <code>{ type, payload, deepLink }</code>. Badge counts synced from unreadCount on every foreground resume and every push receipt. Taps routed through a single handler that parsed the deepLink and pushed the exact screen — ActiveChats, CollaborationRequest, Profile — regardless of whether the app was warm, cold, or dead.</p>
-
-          <p><strong>Proximity + skill matching at query time.</strong> Discovery combined name search (PostgreSQL trigram), skill matching (array overlap on normalized skill tags), and proximity (PostGIS <code>ST_DWithin</code> on lat/lng with GIST index). The query builder composed these as weighted factors — name 0.5, skills 0.3, distance 0.2 — with a hard filter for collaboration intent flags. No client-side merge; the database returned ranked results in a single round trip.</p>
-
-          <h3>Result</h3>
-          <p>Live on App Store and Play Store. Zero crashes at demo. The same discipline — staged rollouts, feature flags, single-transaction identity, dual-channel push with deep links, composed query ranking — runs in every other product I ship.</p>
+          <p>Legato is where I learned to hold a product calm.</p>
+          <p>A musician profile, discovery, follow, block, groups, chat, push. Small US team, both stores. My part was the phone as it is — killed app, denied permission, null photo, stale socket, unloaded list — and the server agreeing with it.</p>
+          <p>I start behind the screen. A wrong order means a wrong partner. A follow with no notice kills the loop. A tap that lands at root kills the reply. A crash in a demo room kills trust. So I work failure first.</p>
+          <p>Search, I kept honest. Fuzzy name, skill overlap on cleaned tags, nearness by true geography, open-to as hard gate. Faces first, then distance. One query returns ranked. I removed the second sort on the phone — it re-sorted rounded strings and broke the database order. I filtered empty photos at query. No merging on the phone, no extra trips. When you type fast, old requests cancel. When place is denied, browsing stays. When lists load late, they fall back to empty with guards. New arrivals never duplicate your browsing.</p>
+          <p>Matching, I shipped to Explore. Scores run apart from search so the two never fight. Base with capped skill bonus, intent through casual/serious/professional fit, nearness close/far, activity recent/silent by true last-active time. Teach finds learn, looking-for maps to open-to across jam, band, collaboration, teacher, student. Limited per person with expiry. Precomputed daily and on profile change, cleaned weekly, reads cheap. I put it behind a flag with viewed, dismissed, and refresh paths and funnel, and I fixed the time it scores on — without true activity every score reads active and wrong.</p>
+          <p>Identity, I kept single. Registration creates user, profile, chat identity, and skills together. No orphans, no race. Google and Apple through the same path, recovery by code. I fixed login and logout sticking navigation, and made startup wait for auth and onboarding before fetching nearby.</p>
+          <p>Follow, I kept notified without risking the follow — token and email after commit, failure never rolls back the relation. Block, I kept everywhere including search within followers. Chat, I made reconnect clean by disconnecting first and resetting flags, gated delete by capability, kept names straight. Open-to to chat, inbox from profile with back to profile, custom-message entry. My rule for taps: that exact thread, back intact.</p>
+          <p>State, I moved writes into actions — direct writes threw and took screens. I unified three lists into one with stable dependencies — reload loops and remounts ended, infinite scroll wired. Media, I tracked compression from the camera and settled timestamped uploads with thumbnails — no stretched faces, no stuck states.</p>
+          <p>Release, I kept shippable while adding. Major SDK and React upgrades with camera, picker, auth, and push intact. Crash reporting with user context from the start, then I burned the queue — thread seen, social activity, connection, null handlers. Tutorial and tour, birthday, location control, loading states.</p>
+          <p>What stayed with me: unfinished paths behind flags, end-to-end on two phones per release, typed contracts so mobile and API cannot drift. The product held — profile to discovery to follow to chat to push, ordered, scored, notified, back intact — because every failure had an owner before it reached a musician.</p>
         </div>
       </div>
     </section>
