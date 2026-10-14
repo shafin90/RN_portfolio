@@ -45,22 +45,16 @@
     <section class="case-study" id="srkan">
       <div class="wrap">
         <p class="eyebrow">Case Study</p>
-        <h2 class="section-title">SRKAN — Devotional platform, offline-first across continents</h2>
+        <h2 class="section-title">SRKAN — Devotional platform, steady on weak networks</h2>
         <div class="story-body">
-          <h3>The constraint</h3>
-          <p>Communities across India, Africa, and the Middle East. Villages with 2G, intermittent connectivity, users on 2GB RAM devices. Search across programs, testimonials, donations that stays instant. Donations that complete on bad radios. Reminders that fire without a server.</p>
-
-          <h3>Architecture decisions</h3>
-          <p><strong>Offline-first reminders via local scheduling.</strong> Expo Notifications with a scheduler provider that rebuilds the plan from programs and daily schedules on every app launch. 60-item iOS limit respected by pruning to nearest 60 reminders across 6 weeks ahead. 10-minute lead time per reminder. Android notification channels with importance levels per category (prayer, event, donation). Provisional iOS permissions let quiet reminders prove value before the prompt. Multilingual titles stored per-program, rendered locally. Zero server dependency — the reminder fires in airplane mode.</p>
-
-          <p><strong>Multi-field search with tenant-aware indexing.</strong> Programs, testimonials, donations — each with different searchable attributes. PostgreSQL trigram indexes on name/description, B-tree on status/featured/date, composite indexes matching the query shapes. Pagination via cursor (not offset) so new content mid-browse doesn't duplicate or swallow rows. Filters for status, featured, date ranges applied in the index scan, not post-query. Sub-100ms p95 on cold start.</p>
-
-          <p><strong>Donation flow: idempotent by design.</strong> PayU integration with server-side verification — never trust client callback. Webhook-driven status updates with deduplication via unique event ID per transaction. Multi-currency tracking with rates frozen at payment initiation. Receipt uploads for manual verification of bank transfers, stored encrypted. Automated SWIFT instructions emailed for international donors. Idempotency key = donation intent ID; a retry on a dropped connection reuses the same key, never double-charges.</p>
-
-          <p><strong>Performance on 2GB RAM.</strong> Image loading via expo-image with thumbnail cache, aspect-aware compression, lazy-load below fold. VirtualizedList for all long lists (programs, testimonials, donations) with windowSize=5 and removeClippedSubviews. Bundle split via Expo router lazy routes — donation flow, search, admin — loaded only when navigated. JS bundle stays under 3MB gzipped.</p>
-
-          <h3>Result</h3>
-          <p>App works in places with no coverage, on devices with 2GB RAM, survives OS kills because every piece of state assumes the process is dead. Store ratings hold at 4.7+ across regions because the product doesn't blame the network — it designs for it.</p>
+          <p>SRKAN is where I learned to serve people the network forgot.</p>
+          <p>Villages with intermittent signal, small phones, users who need prayer, programs, and giving to simply work. My part was reading that never needs signal, reminders that fire without a server, and donations a donor can trust on a bad radio.</p>
+          <p>I start from the morning. Someone opens the app before dawn. Home must show today instantly from what is already there, then refresh quietly without losing scroll. Reading scrolls smooth with steady rows that only redraw when language changes. Audio holds one lock — new playback releases the old — with lock-screen controls that survive calls and Bluetooth drops. Position returns after the system kills the app. Images stay light with cached thumbnails so small phones hold their frame rate.</p>
+          <p>Reminders, I kept local. The plan rebuilds from programs and daily schedules on every launch, in the language of each program, with quiet permission first so value proves before the prompt. No signal needed. The reminder fires in airplane mode because the schedule lives on the phone.</p>
+          <p>Finding, I kept per type. Programs by title and place, stories by name and healing, donations by name and transaction — each narrowed by status, featured, branch, currency, and date range at query time. Donations keep a dedicated transaction lookup beside the general search, plus export with the same filters and a currency list for finance. Admin lists that stay small filter where they stand. What the eye sees is what the query asked for, nothing merged on the phone.</p>
+          <p>Giving, I kept careful. Payment confirmed on the server, never trusted from the client. Status follows the provider through webhooks. Receipts upload for bank transfers that need a human eye, stored away safely. Confirmations and transfer instructions go out by email. A repeated press on a dropping connection finds its first result — one intent, one charge, one receipt. Money in more than one currency freezes its rate at the start so finance never chases drift.</p>
+          <p>Daily rhythm, I kept truthful to place. Schedules carry sessions with dates and zones, branches carry live and recorded video that fall back to empty shapes instead of breaking the screen. Roles stay narrow — who may publish, edit, or read — with tokens checked and revoked cleanly. Uploads arrive compressed within limits. Contact writes to mail with validation. Tests guard the endpoints that move money and mail.</p>
+          <p>What stayed with me: design for no coverage, small memory, and a dead process — and the product works everywhere. The donor who presses three times, the reader with no bars, the reminder at dawn — none of them should ever need to think about the network.</p>
         </div>
       </div>
     </section>
