@@ -379,8 +379,8 @@ h1 {
 .post-list a {
   display: block;
   position: relative;
-  padding: 28px 16px 28px 0;
-  margin: 0;
+  padding: 28px 16px 28px 10px;
+  margin: 0 -10px;
   border-radius: 6px;
   transition: background-color 0.25s ease;
 }
