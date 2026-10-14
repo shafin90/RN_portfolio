@@ -117,7 +117,6 @@ h1 {
 
 .hero h1 {
   font-size: clamp(40px, 5vw, 56px);
-  font-weight: 800;
   line-height: 1.08;
   letter-spacing: -0.03em;
   margin-bottom: 28px;
@@ -221,15 +220,15 @@ h1 {
 }
 
 .work {
-  padding: 104px 0 120px;
+  padding: 128px 0 144px;
 }
 
 .work .section-title {
-  margin-bottom: 40px;
+  margin-bottom: 48px;
 }
 
 .story {
-  padding: 72px 0;
+  padding: 88px 0;
   border-top: 1px solid var(--line);
   scroll-margin-top: 72px;
   max-width: var(--measure);
@@ -260,7 +259,7 @@ h1 {
   font-size: 16px;
   color: var(--faint);
   line-height: 2;
-  margin: 0 0 32px;
+  margin: 0 0 40px;
 }
 
 .work-index a { color: var(--muted); }
@@ -271,7 +270,7 @@ h1 {
   font-size: 20px;
   font-weight: 600;
   color: var(--ink);
-  margin-bottom: 8px;
+  margin-bottom: 12px;
 }
 
 .story-head {
@@ -446,16 +445,16 @@ h1 {
     gap: 32px;
   }
 
-  .work { padding: 64px 0; }
+  .work { padding: 80px 0; }
 
-  .work .section-title { margin-bottom: 28px; }
+  .work .section-title { margin-bottom: 32px; }
 
-  .work-index { margin-bottom: 24px; }
+  .work-index { margin-bottom: 32px; }
 
   .story {
     grid-template-columns: 1fr;
     gap: 4px;
-    padding: 48px 0;
+    padding: 56px 0;
   }
 }
 
