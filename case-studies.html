@@ -79,22 +79,16 @@
     <section class="case-study" id="kavoogo">
       <div class="wrap">
         <p class="eyebrow">Case Study</p>
-        <h2 class="section-title">KavooGo — Rewards platform, EN/FR Africa, idempotent earning loop</h2>
+        <h2 class="section-title">KavooGo — Rewards that pay once, in two languages</h2>
         <div class="story-body">
-          <h3>The constraint</h3>
-          <p>English- and French-speaking African markets. Campaign matching on country, city, employment, education, salary, eligibility — with normalized location names across inconsistent inputs. Stripe payments with backward-compatible contract migration. Push with SMS fallback. Earning loop that cannot double-pay on retry.</p>
-
-          <h3>Architecture decisions</h3>
-          <p><strong>Campaign matching as structured ranking.</strong> User profile: country, city, employment band, education level, salary band, eligibility flags. Campaigns target the same attributes. Matching = hard filters (eligible?) + ranked boosts (exact city > same country > adjacent). Location normalization at write time: canonical country/city tables, fuzzy match on input, stored as FK. EL/FR market handled by parallel attribute sets, same ranking function.</p>
-
-          <p><strong>Stripe migration without breaking existing users.</strong> Existing <code>campaignId</code> flow kept backward compatible. Added direct-amount flow for new campaigns. Webhook handler accepts both event shapes, normalizes to internal schema. Idempotency via Stripe event ID dedup table. Refund, failure, checkout completion, success — all tracked per event. Guest checkout supported via PaymentIntent + SetupIntent for saved cards.</p>
-
-          <p><strong>Earning loop: verify, record, reward — idempotent at each step.</strong> User completes action → server verifies against campaign rules → records earning with idempotency key (user + campaign + action hash) → triggers reward (wallet credit) in same transaction → pushes notification. Retry on any step replays the same key; wallet credit is a single-row upsert with unique constraint. Double-pay impossible by schema.</p>
-
-          <p><strong>Push with SMS fallback.</strong> Expo Push with encrypted token storage, token validation at registration, per-message ticket tracking. DeviceNotRegistered cleanup job runs daily. Push-first delivery; on permanent failure (unregistered, invalid), Infobip SMS fallback with same payload rendered to text. Read/sent tracking per message per channel. Per-user language preference (EN/FR) stored with token, rendered at send time.</p>
-
-          <h3>Result</h3>
-          <p>Campaign matching reliable across noisy location data. Stripe migration zero-downtime. Earning loop idempotent — retries on bad network never double-pay. Push delivery with SMS fallback keeps reach high across unreliable networks.</p>
+          <p>KavooGo is where I learned money must be boring.</p>
+          <p>People watch and answer to earn, then withdraw to mobile money. English and French side by side. If a survey pays twice or never, trust leaves the same day. My part was eligibility that reads true, payouts that move once, referrals that land, and screens that speak both languages.</p>
+          <p>I start from who may see what. Country, city, work, schooling, pay band, family, gender, account — person and campaign carry the same fields. Names arrive noisy, so I clean at saving and at reading with one canonical place list and shared maps for work, schooling, and pay. A city typed three ways still resolves to one. What the eye sees in profile is the name, what the check uses underneath is the same truth.</p>
+          <p>Earning follows verify, then record, then reward. Watching counts only past its share, completion is caught by address intercept with fallback navigation and a calm manual submit that never fires early. The server checks against campaign rules, records once, and credits the wallet in the same guarded step with the balance held safe against negatives and repeats. A retry finds its first result. Budget is checked before showing — what is left must cover the reward — and the wallet shown is the real stored balance, never a mock.</p>
+          <p>Providers change, the rule does not. Card, mobile money, top-ups and payouts move through the same guarded path with type checks and request limits, deposits confirmed by webhook before the balance moves. Amounts stay in clean steps, contacts pre-register before money moves, and every money webhook carries its kind with amount and campaign attached so finance reads one story.</p>
+          <p>Referrals must land once. Links open the right screen even cold, survive navigation conflicts, and attach after login with the code and rewards present in the response. Self-invite refuses. Reward arrives with its own notice. Stats and configurable rewards stay visible to ops.</p>
+          <p>Identity left the device vendor and came home to server SMS — codes never ride back in responses. Notices turned contextual, naming only what changed, each opening its exact screen. Every hard string across dozens of screens moved into translation with both languages completed and deduped, so the product never flickers tongues.</p>
+          <p>What stayed with me: clean once at entry, check eligibility and budget before showing, pay in one guarded step, land every link, speak both languages fully. The earner who retries on a weak network gets one payout and one message.</p>
         </div>
       </div>
     </section>
