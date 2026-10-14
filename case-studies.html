@@ -62,22 +62,16 @@
     <section class="case-study" id="govihari">
       <div class="wrap">
         <p class="eyebrow">Case Study</p>
-        <h2 class="section-title">Govihari — River-boat ticketing, fixed capacity, zero double-sell</h2>
+        <h2 class="section-title">Govihari — River-boat ticketing, fixed seats, calm boarding</h2>
         <div class="story-body">
-          <h3>The constraint</h3>
-          <p>A boat has fixed capacity. Concurrent load overselling means turning paying passengers away at the dock. Phone numbers are the primary identity (rural users, no email). Guest checkout required. Payments via Razorpay with HMAC verification.</p>
-
-          <h3>Architecture decisions</h3>
-          <p><strong>Reserve → Pay → Confirm as a state machine.</strong> Reserve creates a seat hold with TTL (Redis lock, 10 min). Pay calls Razorpay order creation server-side, HMAC-validates the signature on verification, creates the booking row inside the same DB session as the verified payment — so ticket and money can never disagree. Confirm converts hold → ticket. Failed/expired payments auto-cancel and release the seat. No manual intervention, no stuck inventory.</p>
-
-          <p><strong>Guest checkout with idempotency.</strong> No user row required. Idempotency key = phone + boat + departure timestamp + seat. Retries on bad network reuse the same key — same transaction, never a new charge. Phone number verified via Firebase OTP; token stored encrypted with user context.</p>
-
-          <p><strong>On-device totals matching server.</strong> Booking total calculated client-side (base + taxes + fees) and sent with order creation. Server re-computes and asserts equality; mismatch rejects the order. Prevents client-side manipulation and currency rounding drift.</p>
-
-          <p><strong>Push tied to verification.</strong> FCM token fetched on launch and again after OTP verification — that's the moment device becomes a known user. Foreground handlers present alerts; background handlers persist and badge. Backend exposes explicit endpoints: save-token, get-tokens, send-notification — auditable, not side effects.</p>
-
-          <h3>Result</h3>
-          <p>Zero double-sells at the dock. Stuck inventory eliminated — every seat either confirmed or released. Guest checkout converts users who would otherwise drop at account creation.</p>
+          <p>Govihari is where I learned what a fixed seat really means.</p>
+          <p>Boats between forest landings with set capacity and set times. If one seat goes to two people, the problem shows up at the dock, in front of people. Many travelers carry no email — the phone number is the identity. My part was booking that frees itself, money that never parts from its ticket, and an app that stays light enough for the field.</p>
+          <p>I start from boarding. Only boats that are active and still have seats are shown. A press holds a seat for a short life. If money does not arrive, the seat comes back by itself. No stuck list, no cleanup call. The ticket is written only with confirmed payment, never before. A repeated press on a weak network finds its first result — one intent, one charge.</p>
+          <p>Guests stay guests. No account needed to book. The phone is verified by code, the device becomes known at that moment, and phone plus booking reference is enough to find the trip later — even after reinstall. The bill is counted on the phone so toggling meals, vehicles, or add-ons answers instantly with taxes rounded up, and counted again on the server so both sides trust one total.</p>
+          <p>Cancelling follows the clock. Every cancel carries its reason, and the return follows a living policy that changes with nearness to departure. A cancelled ticket rests under past bookings, never beside active ones. Once cancelled it never looks confirmed again, and finance sees pending where payout waits.</p>
+          <p>The ticket must reach the hand. Tickets render to a file that opens, shares, and downloads again without a second wait — including where newer Android storage moved the ground. Passenger counts and ages are validated at entry so a boat never sails overfull on paper. Each screen keeps its own state instead of one central knot, and every screen was trimmed until the frame budget held.</p>
+          <p>Messages close the loop. Tokens register on launch and again after verification, alerts present in foreground and persist in background, and the dashboard can reach one device or many through a queue that survives bursts. Guards at the edge — request limits, strict cross-origin rules, containerized runs tested under concurrent load — keep the dock calm on busy mornings.</p>
+          <p>What stayed with me: a seat with an end, money with its ticket, a guest findable by phone, a cancel with its reason and return. The owner never cleans up after the app.</p>
         </div>
       </div>
     </section>
