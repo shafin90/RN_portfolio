@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Search is ranking, not a text box — how search failures reduce to three problems: nothing matches, wrong things rank first, or the right things arrive too late.">
+  <meta name="description" content="Search is ranking, not a text box — matching, ranking, and latency, and how to diagnose which one is broken before writing any code.">
   <title>Search is ranking, not a text box — Mashrafi Ahnam Shafin</title>
   <link rel="stylesheet" href="../styles.css">
 </head>
@@ -13,11 +13,11 @@
     <div class="wrap nav-inner">
       <a href="../index.html" class="nav-name">Mashrafi Ahnam Shafin</a>
       <nav class="nav-links">
-        <a href="../expertise.html">Expertise</a>
-        <a href="../blog.html">Blog</a>
-        <a href="../case-studies.html">Case Studies</a>
-        <a href="../contact.html">Contact</a>
-      </nav>
+          <a href="../blog.html">Blog</a>
+          <a href="../case-studies.html">Case Studies</a>
+          <a href="../expertise.html">Expertise</a>
+          <a href="../contact.html">Contact</a>
+        </nav>
     </div>
   </header>
 
@@ -28,8 +28,29 @@
         <p class="eyebrow"><a href="../blog.html">Blog</a> · Apr 2026</p>
         <h1 class="section-title">Search is ranking, not a text box</h1>
         <div class="prose">
-          <p>Search fails in three places and only three: nothing matches that should, the wrong things rank first, or the right things arrive too late. Every search project I have worked on reduced, after the first month of complaints, to one of those three sentences. The discipline is to find out which sentence you are living in before writing code, because each one points at a different layer — matching and normalization, ranking and query shape, indexes and payload size. Teams that skip the diagnosis rebuild the text box. Teams that diagnose fix the layer and watch the complaints stop.</p>
+          <p>Search fails in three places and only three: nothing matches that should, the wrong things rank first, or the right things arrive too late. Every search project I have worked on reduced, after the first month of complaints, to one of those three sentences. The discipline is to work out which sentence you are living in before writing code, because each one points at a different layer. Teams that skip the diagnosis rebuild the text box. Teams that diagnose fix the layer and watch the complaints stop.</p>
+
+          <h2>Nothing matches that should</h2>
+          <p>Matching breaks because the database is honest and the user is not. A misspelling. A city written three different ways. French on one side and English on the other. A skill one person calls drumming and another calls percussion. If matching requires exact words, the list looks empty when it is not, and the user concludes the product does not have what they need.</p>
+          <p>The fix is not a cleverer query. It is cleaning the input once, at the moment it enters the system, rather than forgiving it on every keystroke. I keep one canonical list of places and one canonical set of tags, fuzzy-match the input against them once, and store the reference. After that, search becomes cheap equality, and the messy world stops being a permanent tax on every request.</p>
+
+          <h2>The wrong things rank first</h2>
+          <p>Order is a business decision that gets made by an engineer who was not in the room. Two results match, so which one is first? The newer one, the closer one, the higher rated one, the one that paid? If nobody writes the rule down, the phone sorts, and sorting on the phone is slow and subtly different on every device.</p>
+          <p>Some rankings are hard gates rather than preferences. A musician who is not open to teaching should not appear in results for finding a teacher, no matter how well the name matches. A campaign a person is not eligible for should not be shown at all. And budget that has already been spent should remove the option rather than offer something the business cannot honour. Eligibility first, then order.</p>
+          <p>The other half of ranking is letting the database do it. I have watched a second sort on the phone quietly re-order results that the database had already ordered correctly, using values rounded to one decimal place, putting the wrong row on top. Nothing looked broken. The list was simply subtly wrong, and nobody could say why. When the database returns ranked results in a single round trip and the client renders them without merging, this entire class of bug stops existing.</p>
+
+          <h2>The right things arrive too late</h2>
+          <p>Latency is a budget, and like any budget it needs a number and a reference device. First results within four hundred milliseconds on a mid-range phone on throttled three-G is a real requirement. Fast on my flagship is how latency budgets die, because the device in your pocket is rarely the device in your hand during development.</p>
+          <p>Slow search also comes from doing the work in the wrong place. Fetching a large set and filtering it on the phone, or issuing many small queries to assemble one list, or merging several sources in the client, all feel responsive on a good network and unusable on a weak one. Filters belong in the query so they narrow before fetching. Pagination should move by position rather than by page number, so that new content arriving mid-browse neither duplicates rows nor swallows the ones already seen.</p>
+
+          <h2>The three sentences, applied</h2>
+          <p>A devotional library with several kinds of content, where each kind has different searchable fields and different filters, where the answer has to arrive instantly on a village connection while new items keep arriving. A bus network where the same shapes repeat across many separate companies, where adding a new city must never disturb the existing ones. A rewards platform where eligibility and remaining budget are checked before anything is shown, across noisy location data in two languages. A musician product where intent is decided before distance, because being wrong about order there means a wrong partner rather than an untidy list.</p>
+          <p>Same three sentences every time. Different answers, because the businesses are different.</p>
+
+          <h2>Why it matters</h2>
+          <p>Users judge search in one try. One try that lands is retention. One try that misses is an uninstall, and the person never tells you why. This is why I insist on the diagnosis before the work, and why the boring questions, what must match, what ranks first, and how fast, are worth more than any amount of query tuning applied in the wrong layer.</p>
         </div>
+        <p class="see-all"><a href="../blog.html">&larr; All notes</a></p>
       </div>
     </article>
 

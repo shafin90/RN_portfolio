@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="If it only works while open, it isn't push — why push notifications that depend on the app being alive are the most expensive kind of failure.">
+  <meta name="description" content="If it only works while open, it isn't push — why undelivered notifications are the most expensive silent failure in mobile, and how to specify the delivery contract.">
   <title>If it only works while open, it isn't push — Mashrafi Ahnam Shafin</title>
   <link rel="stylesheet" href="../styles.css">
 </head>
@@ -13,11 +13,11 @@
     <div class="wrap nav-inner">
       <a href="../index.html" class="nav-name">Mashrafi Ahnam Shafin</a>
       <nav class="nav-links">
-        <a href="../expertise.html">Expertise</a>
-        <a href="../blog.html">Blog</a>
-        <a href="../case-studies.html">Case Studies</a>
-        <a href="../contact.html">Contact</a>
-      </nav>
+          <a href="../blog.html">Blog</a>
+          <a href="../case-studies.html">Case Studies</a>
+          <a href="../expertise.html">Expertise</a>
+          <a href="../contact.html">Contact</a>
+        </nav>
     </div>
   </header>
 
@@ -28,8 +28,27 @@
         <p class="eyebrow"><a href="../blog.html">Blog</a> · Jul 2026</p>
         <h1 class="section-title">If it only works while open, it isn't push</h1>
         <div class="prose">
-          <p>The failure is silent, which makes it the most expensive kind. A crashed screen produces a report. A failed payment produces a ticket. An undelivered notification produces nothing — no error the user sees, no log anyone reads, just a retention curve that sags for reasons nobody can name. Teams then debate content, timing, and copy, rewriting messages that were never received. The copy was never the problem. The pipe was.</p>
+          <p>The failure is silent, which makes it the most expensive kind. A crashed screen produces a report. A failed payment produces a ticket. An undelivered notification produces nothing, no error the user sees, no log anyone reads, just a retention curve that sags for reasons nobody can name. Teams then debate content, timing, and copy, rewriting messages that were never received. The copy was never the problem. The pipe was.</p>
+          <p>The sentence that starts this post should be illegal in a requirements document. The app should send push notifications reads like one feature, and it is at least six. Miss any clause and the operating system will fill it in, with silence.</p>
+
+          <h2>Which channel, in which order</h2>
+          <p>Push is the primary channel and the least reliable one. Tokens expire, users disable permissions, manufacturers kill background services, and the operating system caps how many local notifications a device will hold. I have built around that cap by rebuilding six weeks of reminders from program schedules and pruning to the nearest sixty, and the requirement had to state the horizon, the lead time, and what triggers a rebuild. None of that appears in send reminders.</p>
+          <p>So every notification needs a named fallback, and the fallback depends on the message class. A booking confirmation falls back to a text message when push cannot be delivered, because the passenger has a plane to catch. Marketing never falls back, because the cost is real and the value is speculative. A one-time code uses the reverse order, since delivery failure locks a person out of their own account.</p>
+          <p>Each fallback has a price. Per-message text costs money, which means channel priority is a budget decision disguised as a technical one, and it has to be surfaced before launch rather than discovered on the first invoice. I make the founder sign for it.</p>
+
+          <h2>Opening exactly where</h2>
+          <p>Opens the app is a failed requirement. Every notification has to name its deep-link target, the exact booking, the exact thread, the exact trip. Then the tap has to work regardless of the state the app was left in, warm, cold, or killed hours ago, and the back stack has to be preserved so the person returns to where they came from instead of being dumped at the root.</p>
+          <p>Badges carry the same contract. Whose unread count, synced from where, and cleared by which action. I reconcile badge counts from the true unread value on every foreground resume and every push receipt, because a badge that lies is worse than no badge. Users learn that your numbers are not real, and then they stop trusting the ones that are.</p>
+
+          <h2>Timing, expiry, and the truth of delivery</h2>
+          <p>Your bus leaves in ten minutes, delivered an hour late, is misinformation. Timing rules are part of the requirement: quiet hours, the timezone of delivery relative to the person receiving it, and expiry. A departure warning that lands after the bus has left is actively harmful, because it trains people to ignore the channel.</p>
+          <p>Then there is proof. Dead tokens are pruned and logged. Per-message tickets are tracked through the provider. Undeliverable critical messages escalate to the next channel instead of disappearing. Dual-channel delivery states its deduplication rule so the person is informed once, not three times. I specify notifications the way lawyers specify service levels, because that is exactly what they are, and the retention curve your investors will stare at is built out of these clauses.</p>
+
+          <h2>The habit that needs no server</h2>
+          <p>Some messages should not depend on your infrastructure at all. A prayer reminder in a village with no coverage has to fire in airplane mode, which means the schedule lives on the device, rebuilt from programs and schedules every time the app launches, rendered in each program's own language, and capped at what the operating system will actually hold. I ask for quiet permission first so the reminder proves its value before the user is asked to grant it.</p>
+          <p>That product taught me the whole shape of the problem. The message has to arrive when the network is absent, the process is dead, and the user has not opened the app in a week. Anything less than that is not a notification system. It is a console log.</p>
         </div>
+        <p class="see-all"><a href="../blog.html">&larr; All notes</a></p>
       </div>
     </article>
 

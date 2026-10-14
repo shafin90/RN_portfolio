@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Notes on systems that have to be correct — mobile engineering and its impact on real business.">
+  <meta name="description" content="Notes on systems that have to be correct — search that ranks, seats that lock, messages that arrive, and requirements that survive the operating system.">
   <title>Blog — Mashrafi Ahnam Shafin</title>
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -27,30 +27,35 @@
       <div class="wrap">
         <p class="eyebrow">Blog</p>
         <h1 class="section-title">Notes on systems that have to be correct.</h1>
-        
+        <p class="page-head">Everything here came out of a production failure I had to diagnose, or a rule I had to write down before the damage. No frameworks, no tool tours. Just the parts of mobile work that break silently.</p>
+
         <ul class="post-list">
           <li>
             <a href="blog/requirements-are-a-system.html">
-              <time datetime="2026-10-13">Oct 2026</time>
+              <time datetime="2026-10-13">Oct 2026 · 9 min</time>
               <h2>Requirements are a system, not a document</h2>
+              <p>Every failed mobile project I have been called into had a requirements document. It was reviewed, signed, and described every screen in careful detail. Then money went missing, seats sold twice, and notifications never arrived. The screens were correct. The system was not.</p>
             </a>
           </li>
           <li>
             <a href="blog/a-seat-is-a-lock.html">
-              <time datetime="2026-09-12">Sep 2026</time>
+              <time datetime="2026-09-12">Sep 2026 · 6 min</time>
               <h2>A seat is a lock</h2>
+              <p>A seat is not free or sold. It is free, held, taken, cancelled, or freed again, and every transition has an owner and a clock. Why a double-sell reports success twice, and why hold duration is pricing expressed as minutes.</p>
             </a>
           </li>
           <li>
             <a href="blog/if-it-only-works-while-open.html">
-              <time datetime="2026-07-03">Jul 2026</time>
+              <time datetime="2026-07-03">Jul 2026 · 5 min</time>
               <h2>If it only works while open, it isn't push</h2>
+              <p>A crashed screen files a report. A failed payment files a ticket. An undelivered notification files nothing, so the team debates the copy for messages that were never received. Specifying the delivery contract before design.</p>
             </a>
           </li>
           <li>
             <a href="blog/search-is-ranking.html">
-              <time datetime="2026-04-18">Apr 2026</time>
+              <time datetime="2026-04-18">Apr 2026 · 6 min</time>
               <h2>Search is ranking, not a text box</h2>
+              <p>Search fails in three places and only three: nothing matches, the wrong things rank first, or the right things arrive too late. Each points at a different layer, and diagnosing wrong means rebuilding the text box.</p>
             </a>
           </li>
         </ul>
