@@ -371,7 +371,7 @@ h1 {
 
 .post-list {
   list-style: none;
-  max-width: 40rem;
+  max-width: 54rem;
 }
 
 .post-list li + li { border-top: 1px solid var(--line); }
@@ -395,8 +395,7 @@ h1 {
 
 .post-list p {
   color: var(--muted);
-  max-width: 34rem;
-  transition: color 0.25s ease;
+  max-width: 44rem;
 }
 
 .post-list a:hover h2 { color: var(--muted); }
@@ -409,7 +408,7 @@ h1 {
   .post-list h2 { transform: none !important; }
 }
 
-.post .wrap { max-width: 40rem; }
+.post .wrap { max-width: 46rem; }
 
 .prose { margin-top: 36px; }
 
