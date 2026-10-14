@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A message that only works while the app is open is not a notification. Why the dead-app case is the only case that matters, and what it costs to design for.">
+  <title>After the app is dead — Mashrafi Ahnam Shafin</title>
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+
+  <header class="nav">
+    <div class="wrap nav-inner">
+      <a href="../index.html" class="nav-name">Mashrafi Ahnam Shafin</a>
+      <nav class="nav-links">
+          <a href="../blog.html">Blog</a>
+          <a href="../case-studies.html">Case Studies</a>
+          <a href="../expertise.html">Expertise</a>
+          <a href="../contact.html">Contact</a>
+        </nav>
+    </div>
+  </header>
+
+  <main id="top">
+
+    <article class="page post">
+      <div class="wrap">
+        <p class="eyebrow"><a href="../blog.html">Blog</a> · Notifications · 6 min read</p>
+        <h1 class="section-title">After the app is dead</h1>
+        <div class="prose">
+          <p>A crashed screen files a report. A failed payment files a ticket. An undelivered notification files nothing at all. Nothing throws, nothing logs, no alert fires, and the user simply does not come back. The retention curve sags for reasons nobody can name, and the team spends a fortnight rewriting the copy of messages that were never received.</p>
+          <p>The reason this failure is so consistently the most expensive one is that it is invisible from inside the product. Everything works. The code that sends the message succeeds, the provider accepts it, the logs show the right thing. The gap is between the moment the provider accepts a message and the moment a human being sees it, and almost no team has anything measuring that gap.</p>
+
+          <h2>The only case worth designing for</h2>
+          <p>Most notification work is built and tested with the app in the foreground, because that is the condition under which it is convenient to build and test. The message appears. The badge updates. The developer sees it work and the requirement is considered satisfied.</p>
+          <p>That is the easy case, and in production it is the minority case. The operating system decides when your app is alive and it is not generous about it. It suspends background work to save battery, terminates suspended apps to reclaim memory, restricts what runs in the background, throttles everything else, and does not tell your users when it has done any of it. On top of that, tokens expire, permissions get denied, users turn notifications off entirely, and manufacturers ship their own variations on the theme.</p>
+          <p>So the design question is not how to send a message. It is what happens when the message is sent and the device is not cooperating. That is not an edge case to be handled later. On any real product it is the majority of deliveries, and the user who needs a message is usually the one whose phone is least able to receive it.</p>
+
+          <h2>The reminder that has to fire with no server</h2>
+          <p>The clearest example I have worked on is a prayer reminder for communities where coverage is intermittent and phones are old. The requirement was one line long. People must receive reminders.</p>
+          <p>The only design that met it was to remove the server from the delivery path entirely. The schedule lives on the device. It is rebuilt from the underlying programme data every time the app launches, so it repairs itself whenever the app is opened rather than depending on a background job that may never run. It is rendered in the language of the programme rather than the language of the device, because the person receiving it and the person who set the device up are frequently not the same person.</p>
+          <p>Then the platform's own limits had to be respected rather than discovered. The system will only hold a limited number of scheduled notifications, so the plan is pruned to the nearest set across the weeks ahead, with enough lead time that the device has a chance to wake before the reminder is due. Permission is requested quietly, after the value has been demonstrated, because a prompt fired before anyone has seen a reminder is a prompt that gets permanently declined.</p>
+          <p>The result is a reminder that fires in airplane mode. It is not a clever fallback. It is the product working as designed, because the design assumed the worst case rather than treating it as a degraded path.</p>
+
+          <h2>Where delivery quietly stops and nobody is told</h2>
+          <p>Even when you have done all of that, delivery fails silently by default, and the three failure points are worth naming because each one needs its own handling.</p>
+          <p><strong>The token is dead.</strong> Every push token has a finite life. It expires when the app is reinstalled, when the user resets the device, when the operating system revokes it, and eventually for no reason anybody can determine. A message sent to a dead token is accepted by the provider and delivered to nothing. If you are not checking, you cannot tell the difference between a message delivered and a message discarded, so tokens get pruned and the failures get logged, deliberately, because an unpruned dead token is a permanently broken recipient.</p>
+          <p><strong>The permission is gone.</strong> The user denied it, or the system took it, or they simply switched notifications off for your app in settings. The message is accepted and never shown. There is no API that tells you this happened, which means the only way to find out is to measure whether anything came of the notification, and that requires knowing what came of it.</p>
+          <strong>It arrived at the wrong moment.</strong> A departure warning that lands an hour after the bus has left is not a late message, it is misinformation, and it trains people to ignore the channel entirely. Timing is part of the contract, including quiet hours, the timezone the message is scheduled against rather than the one the device happens to be set to, and an expiry on the payload so the app can show something honest when the user finally opens it.</p>
+
+          <h2>The message that costs money to rescue</h2>
+          <p>Every one of those failures has an obvious remedy and the remedy is not free. Sending a text message instead costs money per message, and that turns the fallback into a budget decision, and a budget decision is not an engineering decision.</p>
+          <p>Which means somebody has to decide, per message class, whether it is worth a fallback at all, and sign it. A booking confirmation is worth it, because the customer has a plane to catch and the alternative is a stranded stranger. Marketing is not, because the speculative value of a message about something the customer did not ask for does not justify a per-message cost applied to a whole audience. And a one-time code is worth paying for, in the opposite direction, because the person cannot proceed without it.</p>
+          <p>In practice this is where notification projects quietly lose their budget, because the price of the fallback is discovered after launch, on an invoice, rather than being an amount the owner agreed to before the feature shipped. By then the fallback is load-bearing and cannot be turned off without losing the messages.</p>
+
+          <h2>How you know it worked</h2>
+          <p>The last piece is measurement, and most products skip it because the provider gives you a success response that does not mean what people assume it means. Accepted is not delivered. Delivered is not opened. Opened is not read.</p>
+          <p>What you can measure honestly is narrower and more useful. You can track, per message, whether anything came of it, in whatever way your product allows. A ticket opened shortly after a departure message. A login after a code. An action after a payment notice. That correlation is imperfect and it is still the only honest answer to the question the founder is actually asking, which is whether the person found out.</p>
+          <p>The test I use is simple and it is not a technical test. Pick the message in your product that matters most if it never arrives, and ask what your product does when it does not. If the honest answer is nothing happens and nothing is recorded, then your notification system is decorative, and the retention curve you are trying to explain has already been explained.</p>
+        </div>
+        <p class="see-all"><a href="../blog.html">&larr; All notes</a></p>
+      </div>
+    </article>
+
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer-inner">
+      <span>© 2026 Mashrafi Ahnam Shafin</span>
+      <span>Mobile Product Developer</span>
+    </div>
+  </footer>
+
+</body>
+</html>

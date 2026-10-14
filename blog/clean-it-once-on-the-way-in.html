@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Messy input is a permanent tax on every future query. Why cleaning once at the moment data enters the system is cheaper than forgiving it on every keystroke, forever.">
+  <title>Clean it once on the way in — Mashrafi Ahnam Shafin</title>
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+
+  <header class="nav">
+    <div class="wrap nav-inner">
+      <a href="../index.html" class="nav-name">Mashrafi Ahnam Shafin</a>
+      <nav class="nav-links">
+          <a href="../blog.html">Blog</a>
+          <a href="../case-studies.html">Case Studies</a>
+          <a href="../expertise.html">Expertise</a>
+          <a href="../contact.html">Contact</a>
+        </nav>
+    </div>
+  </header>
+
+  <main id="top">
+
+    <article class="page post">
+      <div class="wrap">
+        <p class="eyebrow"><a href="../blog.html">Blog</a> · Search · 6 min read</p>
+        <h1 class="section-title">Clean it once on the way in</h1>
+        <div class="prose">
+          <p>Every search that fails to find something should have returns an empty result, and an empty result is the most damaging thing a discovery product can show. It does not read as a mismatch. It reads as absence, and people conclude the thing they want does not exist here, which is a different conclusion from the one that is true.</p>
+          <p>The reason it happens so consistently is that it is not a query problem. The query is doing exactly what it was asked. The problem is upstream, in what was stored, and the two are easy to confuse because they produce the same symptom and live in different layers.</p>
+
+          <h2>What the database is actually holding</h2>
+          <p>Consider a city. In one product it arrives from a dropdown. In another it is typed by somebody whose keyboard produced a different character, or who speaks a second language and writes the name the way they say it, or who has moved between two spellings that are both correct in different places. In another it arrives through an integration written by somebody else years ago, before you were involved.</p>
+          <p>So the table accumulates Abidjan and Abidjan with a curved apostrophe and ABIDJAN and a spelling that is simply wrong, and none of them are bugs. Each was a real person making a reasonable attempt to type a real place. Now a person searches for the name they know, and the row holding their city does not match, and the list is empty, and they conclude your product has no results.</p>
+          <p>This is the failure I have seen most often in search, and it is the one where teams most reliably optimise the wrong thing, because the fix that feels productive is making matching more tolerant, which treats the symptom and adds cost to every query forever.</p>
+
+          <h2>Two ways to fix the same problem</h2>
+          <p>There are two ways to make an approximate name match an approximate stored name. Both work. They are not equivalent, and the difference is a permanent bill.</p>
+          <p>The first is to be forgiving at search time. Every keystroke goes to the database with a tolerant comparison, and it works, and it works for as long as the table is small. As it grows, tolerant comparison over free text stops using an index and starts reading the table. That is the moment search gets slow, and the moment the answer starts depending on how the database feels about your data that day rather than on what you asked for.</p>
+          <p>The second is to forgive once, at the moment the value enters the system. Keep a canonical list of places. When something arrives that is not on the list, match it tolerantly against that list, once, and store a reference to the canonical entry rather than the string somebody typed. After that, every search becomes an exact comparison against a reference, which is fast, indexable, and correct.</p>
+          <p>The second option has a cost people dislike, which is that it requires deciding what the canonical list is, and somebody has to own it. It also requires cleaning what already exists. Both are real costs. Both are one-time. The first option's cost is a permanently more expensive and permanently less predictable query, paid on every request forever, by every user, in exchange for never having to make the decision.</p>
+
+          <h2>Why the second one wins even when it looks more work</h2>
+          <p>The argument for forgiving at search time is that it never rejects a legitimate entry. That is true and it is exactly the trap, because it means the system has no way to say that two different things are the same place, and therefore no way to count, aggregate, price, or route anything by place.</p>
+          <p>Once place is a reference rather than a string, an ordinary evening of work becomes possible. You can show a user every result in the place they searched for, not only the ones whose spelling happened to match. You can join a booking against the same place a user searched, knowing they are the same place. You can report on inventory by city and get a number, instead of eleven numbers. None of that is a feature request. All of it falls out of having decided, once, what a place is.</p>
+          <p>I have done this in three different products for three different reasons, and in two of them I arrived at it late, after shipping the forgiving version and paying for it in slow queries and support questions about missing results. In the third I did it on the first day, and the only thing I had to do differently was write down the list before writing the form.</p>
+
+          <h2>What it costs your team, honestly</h2>
+          <p>Two things, and neither is technical.</p>
+          <p>Somebody has to own the list. Not write it once, own it. New places arrive, spellings change, a district is renamed, and somebody with the authority to add or retire an entry has to exist, or the list quietly becomes wrong and everything built on it becomes confidently incorrect. This is a small ongoing obligation and it is the reason this approach is often skipped, because it is invisible on a launch date.</p>
+          <p>And you have to decide what to do with data that arrives that does not match anything. Silently storing the unknown string is the default and it is how the table gets dirty in the first place. Rejecting it stops people using your product. The workable middle is to store it as unresolved, keep the product working, and surface the unresolved ones to whoever owns the list, so the debt is visible and someone is told. That is an operations habit, not a database feature, and it is the part that actually determines whether the list stays trustworthy.</p>
+
+          <h2>Where my approach stopped working</h2>
+          <p>Twice I have shipped the forgiving version and told myself the tolerance would be tightened later. Both times it was not tightened, because tightening it later is a data migration that breaks searching for real users, and nobody schedules that voluntarily.</p>
+          <p>What changed my habit was realising the decision is not really about search at all. It is about whether place, category, or skill is a thing your business can count. If it can only ever be a string, then nothing can be aggregated by it, reported by it, or joined against it, and your reporting will be approximate forever in a way nobody will be able to point at and explain.</p>
+          <p>So the question to ask is not how tolerant our matching should be. It is whether this value is an identifier in our business or a label on a string. Once that is answered, the engineering follows, and it follows the same way in every product I have worked on.</p>
+        </div>
+        <p class="see-all"><a href="../blog.html">&larr; All notes</a></p>
+      </div>
+    </article>
+
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer-inner">
+      <span>© 2026 Mashrafi Ahnam Shafin</span>
+      <span>Mobile Product Developer</span>
+    </div>
+  </footer>
+
+</body>
+</html>

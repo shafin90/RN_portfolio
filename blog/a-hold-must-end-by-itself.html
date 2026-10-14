@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A hold with no expiry is not a booking, it is inventory loss. Why the release of a seat is a business decision, and who has to be asked before the number gets written.">
+  <title>A hold must end by itself — Mashrafi Ahnam Shafin</title>
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+
+  <header class="nav">
+    <div class="wrap nav-inner">
+      <a href="../index.html" class="nav-name">Mashrafi Ahnam Shafin</a>
+      <nav class="nav-links">
+          <a href="../blog.html">Blog</a>
+          <a href="../case-studies.html">Case Studies</a>
+          <a href="../expertise.html">Expertise</a>
+          <a href="../contact.html">Contact</a>
+        </nav>
+    </div>
+  </header>
+
+  <main id="top">
+
+    <article class="page post">
+      <div class="wrap">
+        <p class="eyebrow"><a href="../blog.html">Blog</a> · Booking · 6 min read</p>
+        <h1 class="section-title">A hold must end by itself</h1>
+        <div class="prose">
+          <p>Every booking system I have seen begin the same optimistic way. Someone taps a seat, the seat becomes theirs, and the implementation is reasonable because the requirement never asked what happens next. The tap happened. The seat is held. Everything the document described has occurred.</p>
+          <p>Then that person closes the app. Or their connection drops halfway through a card number, which on a weak signal is most of them. Or they get a call, or they simply change their mind. And the seat stays held, indefinitely, by a system that has no concept of a hold ending, because a hold that ends is a piece of business logic that nobody specified.</p>
+          <p>The consequence is not a bug. It is an empty bus, and an empty bus is invisible in every dashboard because the number in the database says the seat was sold.</p>
+
+          <h2>The number that is not engineering</h2>
+          <p>So somebody has to decide how long a hold lasts, and the decision will be made, and the most likely place for it to be made is in a configuration file by an engineer who picked a number that seemed reasonable. That number is a pricing decision. It is expressed in minutes, and it is one of the highest-leverage numbers in the entire product.</p>
+          <p>Too long and you sell inventory that does not exist. A seat held by an abandoned checkout at ten in the morning is still held at noon, still at closing, still tomorrow, and by then it is indistinguishable from a real booking in every report you run. You will conclude that demand fell, when what actually happened is that your own checkout flow consumed your inventory.</p>
+          <p>Too short and you break honest customers. Someone paying by card on a rural connection, or entering details for a relative, or using an authorisation their bank deliberately takes longer to approve, loses the seat they were buying while they were still in the middle of buying it. They will not blame the timeout. They will blame your product, and they will be right to.</p>
+          <p>Neither number is derivable from first principles. It depends on how your customers actually behave, how long your payment provider takes to answer, whether your market tends to book at the last minute, and what your competitors do. That is a business input, and it belongs in a document with the owner's name beside it, agreed before anybody builds the sweeper.</p>
+
+          <h2>Three ways to release it, and why you need all three</h2>
+          <p>Assuming the number exists, releasing a hold turns out to be three separate mechanisms, and in my experience projects that ship only one of them get support tickets about phantom bookings.</p>
+          <p><strong>A scheduled sweep.</strong> This is the one that recovers inventory without anybody looking at it. A recurring job finds holds past their expiry and releases them. Without it, seats are only recovered when a customer happens to look at the same departure again, which means an evening rush can empty a bus and leave it empty until morning, and the morning rush finds nothing to sell.</p>
+          <p><strong>A check at the moment of purchase.</strong> Before any seat is sold, confirm its hold has not already died. This is the guard that stops you overselling in the gap between the sweep running and the hold expiring, and it is the difference between the sweep being a clean-up and the sweep being load-bearing.</p>
+          <p><strong>A notice to the person waiting.</strong> When a hold is released, the person who was holding it is somewhere between screens, possibly having walked away, possibly still typing. If they come back and the seat is gone with no explanation, they conclude the app is unreliable and they try somewhere else. This is the mechanism most often skipped, and it is the difference between losing a sale and losing a customer.</p>
+
+          <h2>Why the duration is different in every business</h2>
+          <p>The mechanics are identical in every product. The number is not, because the cost of being wrong is not.</p>
+          <p>A boat with a fixed number of seats absorbs failure publicly and immediately, in front of a person holding a ticket, at a dock, once. So it leans hard toward short holds and instant self-release, and it accepts that some honest customers lose a seat in exchange for never turning one away.</p>
+          <p>A bus network where each company settles its own day leans differently, because the failure mode is not a person at a dock, it is a company reconciling its books at closing and finding seats it cannot account for. That business needs the recovery to be complete and auditable, which pushes toward aggressive sweeping and toward recording every release with enough detail that the company can see where its inventory went.</p>
+          <p>A donation has no seats, but it has the same structure in a different currency. A donation in progress is held, it expires, and a donor who believes their donation went through must not be wrong about money. The bias there is the opposite. You would rather hold too long and risk a duplicate, which is visible and recoverable, than release too early and tell somebody their donation failed while their money moved.</p>
+
+          <h2>Where my approach stopped working</h2>
+          <p>On one product I made the hold duration configurable per company and let each one set its own number, on the reasonable theory that different operators think differently about pricing. In practice almost none of them ever changed it, and the ones that did set it far too long, which meant I had built a mechanism whose main effect was to give an owner a way to accidentally lose revenue while feeling that they had gained control.</p>
+          <p>What I do now is set a defensible default centrally, measure how many holds actually reach expiry in the first week, and bring that number back to the owner as evidence rather than as a question. A hold expiring at four percent probably means the duration is fine. A hold expiring at forty percent is a checkout that is failing in a way nobody is watching, and no duration setting fixes that, because the customer is leaving before they ever reach the payment step.</p>
+          <p>That distinction took me an embarrassingly long time to internalise. The expiry rate is not primarily a measure of the hold. It is a measure of the checkout, and treating it as a settings problem means tuning a number while the actual failure is somewhere earlier.</p>
+
+          <h2>The question to ask your team</h2>
+          <p>Ask what happens to a seat when the person holding it closes the app, and then ask who chose that number and where it is written down.</p>
+          <p>If the answer is that it is handled, and the number is in a config file with no name attached, then the release of that seat is currently being decided by a default that nobody chose, and your inventory is being spent on an opinion.</p>
+        </div>
+        <p class="see-all"><a href="../blog.html">&larr; All notes</a></p>
+      </div>
+    </article>
+
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer-inner">
+      <span>© 2026 Mashrafi Ahnam Shafin</span>
+      <span>Mobile Product Developer</span>
+    </div>
+  </footer>
+
+</body>
+</html>
