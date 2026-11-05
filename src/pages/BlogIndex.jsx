@@ -1,0 +1,23 @@
+import { Link } from "react-router-dom";
+import posts from "../data/posts.json";
+
+export default function BlogIndex() {
+  return (
+    <section className="page" id="blog">
+      <div className="wrap">
+        <p className="eyebrow">Blog</p>
+        <ul className="post-list">
+          {posts.map((p) => (
+            <li key={p.slug}>
+              <Link to={`/blog/${p.slug}`}>
+                <time>{p.time}</time>
+                <h2>{p.title}</h2>
+                <p>{p.excerpt}</p>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  );
+}
