@@ -5,7 +5,11 @@ export default function BlogIndex() {
   return (
     <section className="page" id="blog">
       <div className="wrap">
-        <p className="eyebrow">Blog</p>
+        <div className="page-head">
+          <p className="eyebrow">Published writing</p>
+          <h1>Notes from building products that have to work.</h1>
+          <p className="lede">Essays on the engineering decisions behind payments, search, booking, and real-world reliability.</p>
+        </div>
         <ul className="post-list">
           {posts.map((p) => (
             <li key={p.slug}>

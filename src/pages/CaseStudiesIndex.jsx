@@ -1,25 +1,27 @@
 import { Link } from "react-router-dom";
-import cases from "../data/caseStudies.json";
+import { products } from "../pages/Home";
 
 export default function CaseStudiesIndex() {
   return (
-    <section className="page" id="case-studies">
+    <section className="page products-page" id="case-studies">
       <div className="wrap">
-        <p className="eyebrow">Case Studies</p>
-        <ul className="post-list">
-          {cases.map((c) => (
-            <li key={c.slug}>
-              <Link to={`/case-studies/${c.slug}`}>
-                <time>{c.company}</time>
-                <h2>{c.title}</h2>
-                <p>{c.excerpt}</p>
+        <div className="page-head">
+          <p className="eyebrow">Selected product work</p>
+          <h1>Case studies from the product engineering side.</h1>
+          <p className="lede">Each project starts with a product constraint: money must reconcile, a seat must belong to one passenger, or a user must still make progress without a reliable network. Here is how I approached the system behind the experience.</p>
+        </div>
+        <div className="case-grid">
+          {products.map((p) => (
+            <article className="case-card" key={p.slug}>
+              <Link to={`/products/${p.slug}`}>
+                <p className="eyebrow">{p.company}</p>
+                <h2>{p.title}</h2>
+                <p>{p.desc}</p>
+                <span className="case-card-link">Read case study →</span>
               </Link>
-            </li>
+            </article>
           ))}
-        </ul>
-        <p className="see-all">
-          <Link to="/case-studies">View all case studies →</Link>
-        </p>
+        </div>
       </div>
     </section>
   );

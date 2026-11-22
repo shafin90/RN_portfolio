@@ -3,9 +3,9 @@ export default function Contact() {
     <section className="page" id="contact">
       <div className="wrap">
         <p className="eyebrow">Contact</p>
-        <h1 className="section-title">Mashrafi Ahnam Shafin</h1>
-        <p className="section-lede">
-          Mobile Product Developer. Hard systems that have to be correct.
+        <h1>Let’s talk about what you’re building.</h1>
+        <p className="lede">
+          Product Engineer. Tell me what you are building and what needs to work.
         </p>
         <div className="contact-links">
           <a
