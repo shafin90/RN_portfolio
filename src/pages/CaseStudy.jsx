@@ -430,6 +430,20 @@ export default function CaseStudy() {
           </dl>
         )}
 
+        {item.productLinks?.length > 0 && (
+          <nav className="case-product-links" aria-label={`${item.company} product links`}>
+            {item.productLinks.map((link) => (
+              <a href={link.url} key={link.url} target="_blank" rel="noreferrer">
+                {link.label}<span aria-hidden="true"> ↗</span>
+              </a>
+            ))}
+          </nav>
+        )}
+
+        {item.availabilityNote && (
+          <p className="case-availability-note">{item.availabilityNote}</p>
+        )}
+
         {item.atAGlance && (
           <section className="case-glance" aria-label="Case study at a glance">
             <div className="case-glance-head">

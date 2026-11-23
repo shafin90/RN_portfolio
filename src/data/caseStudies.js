@@ -14,6 +14,12 @@ const caseStudies = [
       { label: "Commercial model", value: "Operator plans + platform commissions" },
       { label: "Status", value: "Live · active development" },
     ],
+    productLinks: [
+      { label: "Passenger app · Google Play", url: "https://play.google.com/store/apps/details?id=com.jetexpress.passenger" },
+      { label: "Staff app · Google Play", url: "https://play.google.com/store/apps/details?id=com.bandamatech.staffapp" },
+      { label: "Operator backOffice", url: "https://app.jetexpresstransport.com/" },
+      { label: "Public website", url: "https://jetexpresstransport.com/" },
+    ],
     atAGlance: [
       { number: "01", title: "Model the passenger and parcel businesses separately." },
       { number: "02", title: "Keep seat, payment, and ticket truth on the server." },
@@ -106,10 +112,131 @@ const caseStudies = [
     ],
   },
   {
+    slug: "poolrev",
+    company: "PoolRev",
+    role: "Bug Fixer · Mid-Level Full Stack Developer",
+    period: "Jun 2026 — Jul 2026",
+    status: "Live",
+    title: "One operating system for pool service, from estimate to collected work",
+    detailTitle: "PoolRev — Keep field work, billing, and tenant state in agreement",
+    excerpt: "Pool service is a recurring operation: a customer may own several properties, technicians complete work in the field, and billing follows the service actually delivered. PoolRev connects those responsibilities. My contribution focused on repairing high-risk seams in billing, tenant access, and field operations inside an already-live product.",
+    meta: [
+      { label: "Product", value: "Multi-tenant pool-service operations SaaS" },
+      { label: "Users", value: "Owners · office teams · technicians · customers" },
+      { label: "Business model", value: "Operator subscriptions + customer payments" },
+      { label: "My scope", value: "Billing integrity · tenant boundaries · field workflows" },
+    ],
+    atAGlance: [
+      { number: "01", title: "Treat each property as the operational and billing unit." },
+      { number: "02", title: "Carry a service visit through evidence, invoice, and settlement." },
+      { number: "03", title: "Make payment recovery consistent across every collection path." },
+      { number: "04", title: "Enforce tenant and technician access at trusted boundaries." },
+    ],
+    scopeNote: "PoolRev was already a live, broad operations platform when I joined. This case study describes the full product system, then focuses my contribution on specific billing, authorization, and field-operation fixes; it does not claim I designed or built the entire platform.",
+    sections: [
+      {
+        number: "01", title: "Product overview", navTitle: "Overview",
+        summary: "A pool-service business runs on recurring visits, but the system must account for the right property, technician, service evidence, invoice, and payment each time.",
+        paragraphs: [
+          "PoolRev gives a pool-service operator one workspace for customer and property records, estimates, recurring service plans, technician routes, work orders, billing, reporting, and customer communication. Office teams manage the business from a web app; technicians use a Capacitor mobile app in the field; customers interact through quote, invoice, and service-report pages.",
+          "The product’s core promise is operational continuity. A quote can become scheduled work; a technician records what happened; that service can create a property-scoped invoice; and payment, refund, pause, or retry state remains visible to the operator. GoHighLevel supports CRM and pipeline workflows, Stripe handles customer payments and PoolRev subscriptions on separate paths, and phone, email, storage, and optional AI features connect at explicit integration boundaries.",
+          "I joined for a short contract as a mid-level full-stack bug fixer on the live platform. I traced failures across UI, database rules, Edge Functions, background billing, and the field app, then repaired the specific seam rather than treating each visible symptom as an isolated screen bug."
+        ],
+        cards: [
+          { label: "Business owner", title: "Desktop operations", body: "Review customer and property health, estimates, routes, daily action queues, invoices, collections, reports, and account settings." },
+          { label: "Field technician", title: "Mobile service execution", body: "See assigned stops, access permitted customer details, record readings and photos, complete work, and sync queued changes when connectivity returns." },
+          { label: "Customer", title: "Public service touchpoints", body: "Review and accept a quote, view or pay an invoice, and receive service information without needing the operator’s internal workspace." },
+        ], layout: ["paragraphs", "cards"]
+      },
+      {
+        number: "02", title: "The problem", navTitle: "The problem",
+        summary: "In a live operations product, a workflow is only correct when all of its surfaces agree on what happened.",
+        paragraphs: [
+          "A customer can represent a household or property manager with several pools. Each property can have its own service schedule, rate, credits, invoice history, and pause state. If the system stores billing decisions only at customer level, pausing one pool can accidentally interrupt another, or a secondary address can inherit a rate that was never agreed for it.",
+          "Service completion and billing also run on different clocks. A technician may finish while offline; a scheduled job may catch up later; a payment provider may call back after the customer has left checkout. If UI status, invoice state, payment events, and background work each resolve those events differently, operators see stale failures, duplicate work, or a refund that appears to have vanished.",
+          "Finally, the app is multi-tenant and role-based. A technician needs enough property information to do assigned work, while tenant boundaries must prevent one company’s staff or customer data from appearing in another company’s workspace. Those rules need to hold in the database and server-side actions, not only in the screens."
+        ],
+        cards: [
+          { label: "Revenue risk", title: "Service and money drift apart", body: "A payment can succeed while a failed/overdue badge remains, or an automated invoice can be created twice when concurrent screens race." },
+          { label: "Customer risk", title: "One customer, multiple billing realities", body: "A property manager needs independent service and billing decisions per address, with an aggregate view that does not erase property-level truth." },
+          { label: "Trust boundary", title: "A role check is not a tenant check", body: "An admin role alone does not prove the requested technician, customer, property, or operation belongs to that caller’s tenant." },
+        ], layout: ["paragraphs", "cards"]
+      },
+      {
+        number: "03", title: "Product decisions", navTitle: "Decisions",
+        summary: "I fixed the shared state transition or ownership rule behind the symptom, so the same invariant held across screens and automation.",
+        decisions: [
+          { number: "01", title: "Make property the billing unit", problem: "One customer record can represent several pools, but a rate, pause, credit, or invoice may belong to only one property.", decision: "Carry property scope through recurring billing actions and preserve separate property billing state while the customer view aggregates balances for the operator.", tradeoff: "More explicit scope in forms, queries, and mutations; simpler-to-explain invoices and safer independent service decisions for each address.", impact: "An operator can pause or change the billing context for one property without silently changing the others." },
+          { number: "02", title: "Resolve payment recovery through one shared rule", problem: "Stripe, manual payment, retry, and applied credit paths could settle money while leaving a customer marked failed or overdue.", decision: "Use a shared failed-state resolver: clear failure state only after the relevant settlement condition is met and no open invoice remains; do not implicitly reactivate paused, suspended, or cancelled accounts.", tradeoff: "Every settlement path must call the same domain rule, and partial payment remains distinct from full resolution.", impact: "The financial record, customer status, and collections queues can reflect the same outcome after a payment or retry." },
+          { number: "03", title: "Let the database arbitrate concurrent auto-creation", problem: "Filter-cleaning and batch-invoice screens could both pass a check-then-insert test and create duplicate work orders or draft invoices.", decision: "Assign deterministic deduplication keys, enforce them with unique database indexes, and use idempotent inserts that reread the winning record after a conflict.", tradeoff: "Automation needs a stable identity for the work it creates, and callers must handle the already-created path.", impact: "Concurrent page loads converge on one persisted work order or invoice instead of relying on timing luck." },
+          { number: "04", title: "Bind authorization to the data being changed", problem: "A global admin role did not establish that a technician ID in a request belonged to the caller’s company; broad operations-table access could expose or change sensitive state.", decision: "Compare caller and target tenant context in privileged Edge Functions and narrow row-level policies by role and tenant for operational tables.", tradeoff: "More explicit authorization checks and policy tests at each trusted boundary.", impact: "Cross-tenant technician changes are rejected, and technicians cannot read or mutate admin-only operational records." },
+        ], layout: ["decisions"]
+      },
+      {
+        number: "04", title: "System design", navTitle: "Architecture",
+        summary: "Web, mobile, and public experiences share a Supabase-backed product core, with Edge Functions and scheduled workers owning privileged actions and external side effects.",
+        paragraphs: [
+          "The operator interface is a React, Vite, and TypeScript app. The field app uses the same product data from a Capacitor mobile surface and has local caching and an offline write queue for field work. Customer quote, invoice, and service-report pages expose carefully scoped public journeys rather than the operator console.",
+          "Supabase provides authentication, PostgreSQL, row-level security, storage, Realtime, and Edge Functions. Direct data access is governed by tenant and role policies; privileged billing, payment webhooks, CRM/phone actions, and other server-side work pass through Edge Functions. Cron and retry workers handle invoice generation, reminders, payment recovery, and dunning so a browser session is not responsible for completing the business process.",
+          "Two Stripe roles must remain distinct: Stripe Connect processes an operator’s charges to their customers; a separate Stripe platform path bills the operator for PoolRev SaaS access. QuickBooks is an alternative tenant billing path for customer imports and invoice push, with payment tracked through QuickBooks rather than a direct PoolRev card charge. GoHighLevel provides selected CRM and pipeline synchronization, while Telnyx and configured email/SMS providers connect at separate operational edges. Optional AI and prospecting modules extend the system without becoming part of the critical service-to-payment path."
+        ],
+        cards: [
+          { label: "Clients", title: "Three different jobs", body: "Desktop operators manage the business; mobile technicians execute assigned work; public pages let customers review quotes, invoices, and service information." },
+          { label: "Data and trust", title: "Supabase + PostgreSQL + RLS", body: "Canonical customer, property, route, work, invoice, and payment state is persisted with tenant-aware database access; sensitive operations use server-side checks." },
+          { label: "Automation", title: "Edge Functions + cron/retry workers", body: "Webhooks and background tasks reconcile invoice, payment, reminder, CRM, and communication events after the original user interaction ends." },
+          { label: "External systems", title: "Payment rails, accounting, and channels", body: "Stripe Connect for customer card charges; platform Stripe for PoolRev subscriptions; QuickBooks for tenant imports and invoice push; GHL for CRM; Telnyx and configured providers for communications." },
+        ], layout: ["paragraphs", "cards"]
+      },
+      {
+        number: "05", title: "Key product flows", navTitle: "Journeys",
+        summary: "The system connects acquisition, field execution, and money movement without treating them as separate products.",
+        flows: [
+          { id: "A", title: "Estimate → service → invoice → settlement", summary: "A customer commitment becomes work the operator can complete and reconcile.", steps: ["Operator creates an estimate for a customer and property", "Customer reviews the scoped public quote and accepts", "Office schedules a route stop or work order", "Technician records service, readings, and supporting photos", "Completion creates the appropriate service/billing event", "Property billing rules determine draft/send/charge behavior", "The configured processor updates invoice state: Stripe Connect for card collection, or QuickBooks for invoice push and external collection"], body: "The customer and property are related but not interchangeable. Work completion supplies the operational event; tenant defaults and property-level overrides determine the billing behavior; the payment integration reports settlement separately from the initial checkout interaction.", callout: "A return from checkout is not settlement. Keep invoice and customer status pending until the verified payment path resolves." },
+          { id: "B", title: "Multiple pools → independent billing decisions", summary: "A customer-level summary can aggregate without collapsing property-level ownership.", steps: ["Customer profile links one or more service properties", "Each property keeps its service and billing configuration", "Operator pauses or updates only the intended property", "Invoices, credits, and payment history remain property-scoped", "Customer summary aggregates what the operator needs to review"], body: "This is why the property selector in billing actions matters: the product relationship can remain one customer while schedules, charges, and pauses differ by pool. The trade-off is deliberate data and UI scope in exchange for correct operational decisions.", callout: "Never apply one property’s rate or collected credit to a different property just because both share a customer record." },
+          { id: "C", title: "Repeated trigger → one durable record", summary: "List loads and cron retries must not multiply business work.", steps: ["A screen or scheduled process detects a missing work order or draft invoice", "It derives a deterministic key from the business period and target record", "The database unique constraint arbitrates concurrent inserts", "An idempotent writer ignores the duplicate conflict", "The losing caller rereads and continues with the persisted record"], body: "The race was structural: two callers could both observe ‘missing’ before either wrote. The fix moves the final decision to the database, where concurrency is serialized by the unique key rather than by client timing.", callout: "Retry safely by stable business identity; do not create a new key each time the same job is retried." },
+          { id: "D", title: "Technician sign-in → scoped field work", summary: "A mobile role sees only the work and customer information needed for its tenant and assignment.", steps: ["User signs in and resolves their tenant and role", "Mobile route data is filtered to authorized assigned work", "Sensitive customer/property fields follow capability and route scope", "Offline mutations queue against the same authorized work context", "Server and RLS checks validate the mutation when it syncs"], body: "The mobile interface is not the security boundary. Caller/target tenant checks and least-privilege policies keep unauthorized IDs from turning into cross-company access.", callout: "On sign-out, clear local and in-memory tenant data so a later session cannot momentarily display the previous workspace." },
+        ], layout: ["flows"]
+      },
+      {
+        number: "06", title: "Engineering challenges & trade-offs", navTitle: "Challenges",
+        summary: "The hardest work was making asynchronous and multi-tenant state legible to the operator without weakening financial or access guarantees.",
+        challenges: [
+          { number: "01", title: "A settled invoice with a failed customer badge", problem: "Payment succeeded, but different collection paths could leave stale failed/overdue status and keep the customer in a recovery queue.", options: [{ label: "Patch each screen separately", verdict: "Rejected", reason: "The same defect could return through a webhook, manual payment, retry, card-on-file charge, or account credit." }, { label: "Centralize the transition rule", verdict: "Chosen", reason: "One resolver applies the same settlement condition across the paths that can clear financial failure." }], decision: "Resolve status only when settlement is complete and remaining open invoices are considered; preserve pause, suspension, and cancellation as separate lifecycle states.", tradeoff: "A shared helper adds a dependency across payment handlers and needs careful partial-payment handling.", impact: "The status shown in billing and collections can recover when the underlying money state actually recovers." },
+          { number: "02", title: "Correctness under parallel reads", problem: "Two screens could both auto-create the same business record after reading that it did not yet exist.", decision: "Make record identity deterministic and let a unique constraint plus conflict-safe upsert define the single winner.", tradeoff: "A database migration and stable dedupe-key contract are required; callers must reread after a conflict.", impact: "Concurrent access and retries converge instead of producing duplicate invoices or work orders." },
+          { number: "03", title: "One customer's pools are not one billing account", problem: "Customer-level settings made it easy to pause or price all properties when the operator intended to act on just one.", decision: "Carry property_id through pause and billing operations, then aggregate only at the customer summary layer.", tradeoff: "More scope-aware reads and controls; operators need to choose the exact pool when acting.", impact: "Independent properties can continue or pause service without changing sibling properties' billing." },
+          { number: "04", title: "Global role versus least privilege", problem: "An admin role without a tenant match can target another company’s technician; a broad table policy can reveal admin state to technicians.", decision: "Add caller-to-target tenant checks and tighten RLS permissions by operation and role.", tradeoff: "The same access decision needs both correct server policy and tests for legitimate and foreign-tenant cases.", impact: "Unauthorized cross-tenant edits and reads are blocked at the boundary, not hidden by presentation." },
+        ], layout: ["challenges"]
+      },
+      {
+        number: "07", title: "Results & business impact", navTitle: "Results",
+        summary: "The work made high-risk operator states more coherent across billing, tenant access, and field operations.",
+        paragraphs: [
+          "The specific delivered changes include property-scoped billing pauses, shared payment-state recovery, refund entries in invoice payment history, duplicate guards for auto-created invoices and work orders, tenant checks for technician-management actions, and least-privilege access for operational tables. Related fixes made paused accounts consistently ineligible for invoice/charge paths and kept certain service completion and billing events connected.",
+          "For an operator, these details affect everyday decisions: whether a charge actually succeeded, whether a refund is visible, which pool is paused, whether a technician can see a record, and whether a repeated job creates new work. The repository and change history support these shipped capabilities; I do not have verified revenue, customer-count, support-volume, or time-saved metrics to claim."
+        ],
+        cards: [
+          { label: "Money state", title: "Show the net story", body: "Payment and refund events are visible together, while failed/overdue status follows the resolved invoice state." },
+          { label: "Operator control", title: "Act on one property at a time", body: "Multi-property customers keep property-specific service and billing decisions, with a customer-level summary for oversight." },
+          { label: "Data boundary", title: "Keep tenant and role rules enforced", body: "Technician and operations access is checked against tenant ownership and permitted action, including beyond the visible UI." },
+        ], layout: ["paragraphs", "cards"]
+      },
+      {
+        number: "08", title: "What I would improve next", navTitle: "Next",
+        summary: "After correcting state transitions, make it easier to see where a workflow is waiting and why.",
+        paragraphs: [
+          "I would add an operator-facing reconciliation view that joins invoice events, provider webhooks, retry attempts, refund totals, and the final customer/property state. That would turn ‘why is this still overdue?’ into a traceable answer rather than another support investigation.",
+          "For field operations, I would make queued mobile writes and their replay results visible in a persistent sync surface, then instrument completion-to-invoice latency and duplicate-conflict counts. I would also keep a tenant/role test matrix around every new Edge Function and RLS policy so product expansion preserves the same boundary."
+        ],
+        callout: { label: "Signals I would track", text: "Payment-to-status reconciliation time · refunds with unresolved invoice state · duplicate-create conflicts · property-scope correction rate · offline work waiting to sync · cross-tenant authorization denials." },
+        layout: ["paragraphs", "callout"]
+      },
+    ],
+  },
+  {
     slug: "govihari",
     company: "Govihari",
     role: "Full Stack Mobile Engineer · Contract",
-    status: "Delivered",
+    status: "Delivered · awaiting live release",
     title: "River-boat ticketing with calm boarding as the outcome",
     detailTitle: "Govihari — Protecting fixed-capacity boat bookings",
     excerpt: "A passenger booking is only complete when the boat has capacity, the payment is verified, the ticket is retrievable, and operators can see the same booking state.",
@@ -117,7 +244,10 @@ const caseStudies = [
       { label: "Product", value: "River-boat reservations + operator dashboard" },
       { label: "Users", value: "Travelers · boat operators" },
       { label: "Commercial model", value: "Paid trips + selected add-ons" },
-      { label: "Status", value: "Delivered" },
+      { label: "Status", value: "Delivered · awaiting live release" },
+    ],
+    productLinks: [
+      { label: "Watch product walkthrough", url: "https://www.youtube.com/watch?v=zl4e_pjz3S8&t=12s" },
     ],
     atAGlance: [
       { number: "01", title: "Let guests book without creating a full account." },
@@ -223,6 +353,10 @@ const caseStudies = [
       { label: "Commercial model", value: "Not verified in repository" },
       { label: "Status", value: "Live" },
     ],
+    productLinks: [
+      { label: "iOS app · App Store", url: "https://apps.apple.com/us/app/legato-networks/id6670702062" },
+      { label: "Android app · Google Play", url: "https://play.google.com/store/apps/details?id=com.legato&hl=en-US" },
+    ],
     atAGlance: [
       { number: "01", title: "Make skills, intent, and distance useful discovery signals." },
       { number: "02", title: "Keep identity and artist profile connected." },
@@ -325,6 +459,10 @@ const caseStudies = [
       { label: "Users", value: "Sangat · donors · branch administrators" },
       { label: "Funding", value: "PayU + SWIFT/manual donations" },
       { label: "Status", value: "Live" },
+    ],
+    productLinks: [
+      { label: "iOS app · App Store", url: "https://apps.apple.com/us/app/sarab-rog-ka-aukhad-nam/id1202661629" },
+      { label: "Android app · Google Play", url: "https://play.google.com/store/apps/details?id=com.akal.srkan&hl=en-US" },
     ],
     atAGlance: [
       { number: "01", title: "Make downloaded scripture and audio useful offline." },
@@ -429,6 +567,7 @@ const caseStudies = [
       { label: "Funding", value: "Partner campaign budgets + wallet payouts" },
       { label: "Status", value: "Ongoing · scope still evolving" },
     ],
+    availabilityNote: "Ongoing project · no public product walkthrough",
     atAGlance: [
       { number: "01", title: "Separate implemented reward flows from the wider brief." },
       { number: "02", title: "Connect survey completion to eligibility and wallet credit." },

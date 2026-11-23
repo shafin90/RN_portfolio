@@ -1,11 +1,59 @@
 import { Link } from "react-router-dom";
 import posts from "../data/posts.json";
-import Hero from "../components/Hero";
-import OwnerNarrative from "../components/OwnerNarrative";
 
-const featured = [
-  "the-feature-is-not-the-product",
-  "a-retry-must-find-the-first-result",
+const featuredProducts = [
+  {
+    slug: "poolrev",
+    company: "PoolRev",
+    stage: "Live",
+    title: "Keep field service and billing in sync, property by property.",
+    problem: "Pool-service teams need customer, property, technician work, invoices, and payments to agree across office and field workflows.",
+    outcome: "Operators can follow work from estimates and routes through service records, property-level billing, payment, and recovery.",
+    decision: "Treat each property as the billing unit, reconcile money against open invoices, and enforce tenant boundaries at data and server layers.",
+    tags: ["Billing integrity", "Field operations", "Tenant safety"],
+  },
+  {
+    slug: "jetexpress",
+    company: "JetExpress",
+    stage: "Live",
+    title: "One transport network. Two businesses. Shared operational truth.",
+    problem: "Passenger bookings and parcel delivery use the same routes, fleet, and teams. The system has to keep their workflows distinct while giving operators one control plane.",
+    outcome: "Passengers can book trips and retrieve tickets while operators coordinate parcel handoffs and field staff handle trip work—all around shared trip and fleet data.",
+    decision: "Separate booking and shipment domains, then connect them through shared trip and fleet resources.",
+    tags: ["Multi-tenant", "Payments", "Operations"],
+  },
+  {
+    slug: "govihari",
+    company: "Govihari",
+    stage: "Delivered",
+    title: "Boat tickets that stay trustworthy at the dock.",
+    problem: "Fixed seats, payment confirmation, and boarding all need to agree—even when guests have no account and the network is unreliable.",
+    outcome: "Delivered a complete guest journey from boat and seat selection through server-verified payment, ticket generation, and operator-side booking management.",
+    decision: "Make the server verify payment and booking state, give temporary holds an expiry, and generate a ticket the operator can validate.",
+    tags: ["Booking", "Payment state", "Field workflows"],
+  },
+  {
+    slug: "legato",
+    company: "Legato Networks",
+    stage: "Live",
+    title: "Help musicians find the right people nearby.",
+    problem: "A useful collaboration product needs more than profiles: relevant discovery, safe social boundaries, and conversation after a match.",
+    outcome: "Musicians can discover collaborators by skill and location, form social connections and groups, then continue the conversation through integrated chat.",
+    decision: "Connect skill and location search with profiles, social actions, groups, and real-time chat in one product journey.",
+    tags: ["Discovery", "Geo search", "Realtime"],
+  },
+];
+
+const founderSignals = [
+  { scope: "Customer experience", title: "More journeys depend on the system.", body: "Customers expect bookings, payments, and account changes to complete reliably from end to end." },
+  { scope: "Operations", title: "Exceptions create more manual work.", body: "When a workflow leaves gaps, a small team ends up reconciling states and answering avoidable support questions." },
+  { scope: "Engineering", title: "Every change touches more paths.", body: "More users, integrations, and product surfaces make unclear ownership and hidden dependencies harder to manage." },
+];
+
+const approach = [
+  { number: "01", title: "Find the costly failure", body: "Start with the business promise. Who is affected when it fails, and what does that failure cost?" },
+  { number: "02", title: "Choose the smallest sound system", body: "Turn that promise into clear states, ownership boundaries, and recovery paths before adding infrastructure." },
+  { number: "03", title: "Ship, observe, improve", body: "Deliver the workflow end to end, make production behavior visible, and use what happens to choose the next investment." },
 ];
 
 const recommendations = [
@@ -14,12 +62,10 @@ const recommendations = [
     initials: "ZP",
     image: "/zach-petty.jpg",
     role: "Senior colleague at Legato Networks",
-    currentRoles: [
-      { title: "CEO", company: "Legato Networks · USA", url: "https://www.linkedin.com/company/112346548/", logo: "/legato_logo.jpeg" },
-    ],
+    currentRoles: [{ title: "CEO", company: "Legato Networks · USA", url: "https://www.linkedin.com/company/112346548/", logo: "/legato_logo.jpeg" }],
     date: "Apr 2, 2026",
     url: "https://www.linkedin.com/in/zach-petty-786224187/",
-    quote: "Mashrafi Ahnam Shafin has consistently shown up with professionalism, clarity, and a strong willingness to grow. He communicates thoughtfully, comes prepared, and contributes meaningful feedback, even in broader product and pitch discussions. What stands out most is his attitude: reliable, respectful, and genuinely invested in doing great work and improving every day. He’s been a pleasure to work with, and I’d highly recommend connecting with him.",
+    quote: "Mashrafi Ahnam Shafin has consistently shown up with professionalism, clarity, and a strong willingness to grow. He communicates thoughtfully, comes prepared, and contributes meaningful feedback, even in broader product and pitch discussions. What stands out most is his attitude: reliable, respectful, and genuinely invested in doing great work and improving every day. He’s been a pleasure to work with, and I’d highly recommend connecting with him. Happy to make an introduction if helpful.",
   },
   {
     name: "Dmitry Dergunov",
@@ -37,401 +83,192 @@ const recommendations = [
   {
     name: "Chakri Muthyala",
     initials: "CM",
+    image: null,
     role: "Direct manager and mentor",
-    currentRoles: [
-      { title: "AI/ML Engineer II", company: "Insight Global · IG Labs", url: "https://www.linkedin.com/company/11056/", logo: "/insight-global.jpg" },
-    ],
+    currentRoles: [{ title: "AI/ML Engineer II", company: "Insight Global · IG Labs", url: "https://www.linkedin.com/company/11056/", logo: "/insight-global.jpg" }],
     date: "Oct 1, 2025",
     url: "https://www.linkedin.com/in/chakri-cv/",
     quote: "I’ve worked with Shafin for almost two years, starting from his internship and later on a full-time contract roles. Over this time, I’ve seen him grow into a reliable and skilled developer who can take on challenges with confidence. He’s proactive, communicates clearly, and always delivers quality work. I’d definitely recommend him to anyone looking for a dedicated and talented developer.",
   },
   {
     name: "Amitoj Singh",
-    initials: "AS",
     image: "/amitoj-singh.jpg",
+    initials: "AS",
     role: "SRKAN project collaborator",
-    currentRoles: [
-      { title: "Co-Founder & Full-Stack Developer", company: "Hazur.io · Canada", url: "https://www.linkedin.com/company/101705725/", logo: "/hazur-io.jpg" },
-    ],
+    currentRoles: [{ title: "Co-Founder & Full-Stack Developer", company: "Hazur.io · Canada", url: "https://www.linkedin.com/company/101705725/", logo: "/hazur-io.jpg" }],
     date: "LinkedIn recommendation",
     url: "https://www.linkedin.com/in/singh-amitoj/",
     quote: "Mashrafi delivered excellent work and was great to collaborate with. He communicated clearly, took ownership of challenges, and consistently focused on quality. The project was completed successfully, and I would happily hire him again for future work.",
   },
 ];
 
+const featuredPosts = ["the-workflow-is-the-product-boundary", "money-and-inventory-have-different-clocks"];
+
 export const products = [
-  {
-    slug: "jetexpress",
-    company: "JetExpress",
-    title: "Inter-city buses, many companies, one truth each",
-    desc: "Five surfaces — backend, passenger app, staff app, dashboard, website — that agree on seat, money, time, and who may touch what. Each company counts its own money, seats, and trips.",
-    tags: ["Booking", "Payments", "Multi-tenant", "Identity"],
-    image: null,
-    label: "JetExpress",
-  },
-  {
-    slug: "legato",
-    company: "Legato",
-    title: "Musician collaboration platform, MVP to production",
-    desc: "Musician profiles, discovery, follow, block, groups, chat, push. Small US team, both stores. The phone as it is, and the server agreeing with it.",
-    tags: ["Search", "Matching", "Identity", "Realtime"],
-    image: "/legato_logo.jpeg",
-    label: "Legato",
-  },
-  {
-    slug: "govihari",
-    company: "Govihari",
-    title: "River-boat ticketing, fixed seats, calm boarding",
-    desc: "Booking that frees itself, money that never parts from its ticket, and an app that stays light enough for the field. Guests stay guests.",
-    tags: ["Booking", "Payments", "Offline", "Ticketing"],
-    image: null,
-    label: "Govihari",
-  },
-  {
-    slug: "srkan",
-    company: "SRKAN",
-    title: "Devotional platform, steady on weak networks",
-    desc: "Reading that never needs signal, reminders that fire without a server, and donations a donor can trust on a bad radio.",
-    tags: ["Offline", "Payments", "Notifications", "Search"],
-    image: "/srkan-logo.png",
-    label: "SRKAN",
-  },
-  {
-    slug: "kavoogo",
-    company: "KavooGo",
-    title: "Mobility, delivery, and rewards in one product",
-    desc: "Kash connects optional sponsored activities to everyday rides and parcel delivery, with a wallet that carries earned value forward. The case study separates the broader brief from the campaign and payout code I reviewed.",
-    tags: ["Mobility", "Delivery", "Rewards", "Wallet"],
-    image: null,
-    label: "KavooGo",
-  },
-];
-
-const judgment = [
-  {
-    num: "01",
-    title: "Payment integrity",
-    body: "How to handle a successful payment when booking confirmation fails — and why a retry must find the first result instead of charging twice.",
-  },
-  {
-    num: "02",
-    title: "Concurrency",
-    body: "How to prevent multiple operators from selling the same seat, when two phones touch one inventory on a weak network.",
-  },
-  {
-    num: "03",
-    title: "System reliability",
-    body: "How to handle failures across distributed workflows, where partial success is the normal case, not the exception.",
-  },
-  {
-    num: "04",
-    title: "Offline operations",
-    body: "How to maintain reliable business operations when connectivity is unavailable — and which parts must live on the device.",
-  },
-  {
-    num: "05",
-    title: "Product architecture",
-    body: "How architecture decisions affect business workflows, operational cost, and the cost of the next change.",
-  },
-];
-
-const ownership = [
-  {
-    num: "01",
-    title: "Understand the business.",
-    body: "Understand the actual problem before choosing an engineering solution. The requirement is a system, not a screen.",
-  },
-  {
-    num: "02",
-    title: "Make engineering decisions.",
-    body: "Choose architecture, workflows, and technologies based on product requirements and constraints — with the trade-offs named.",
-  },
-  {
-    num: "03",
-    title: "Own the execution.",
-    body: "Take responsibility for implementation, delivery, production behavior, and reliability — after launch, not just before.",
-  },
+  ...featuredProducts.map((product) => ({ ...product, desc: product.problem, label: product.company, image: null })),
+  { slug: "srkan", company: "SRKAN", title: "Devotional platform, steady on weak networks", desc: "Offline reading, local reminders, and donation workflows designed around the realities of the connection.", label: "SRKAN", image: "/srkan-logo.png", tags: ["Offline", "Donations", "Content"] },
+  { slug: "kavoogo", company: "KavooGo", title: "Campaigns, rewards, and payout accounting", desc: "An ongoing mobility product whose current repository centers on campaign activity, reward accounting, and payment flows.", label: "KavooGo", image: null, tags: ["Campaigns", "Rewards", "Payouts"] },
 ];
 
 export default function Home() {
-  const featuredPosts = posts.filter((p) => featured.includes(p.slug));
+  const featuredPostData = posts.filter((post) => featuredPosts.includes(post.slug));
 
   return (
     <>
-      {/* HERO */}
-      <section className="hero">
-        <div className="wrap hero-grid">
-          <div className="hero-copy reveal">
-            <p className="eyebrow">Senior Product Engineer · Mobile &amp; Backend</p>
-            <h1>I build products that stay reliable when reality gets messy.</h1>
-            <p className="lede">
-              I help ambitious teams turn complex requirements into dependable products—from the first system decision through launch and production.
-            </p>
-            <div className="hero-actions">
-              <a className="btn btn-primary" href="mailto:mashrafiahnam1@gmail.com">
-                Discuss your product
-              </a>
-              <Link className="btn btn-ghost" to="/products">
-                Explore selected work
-              </Link>
-            </div>
-            <div className="hero-meta">
-              <div>
-                <strong>End-to-end ownership</strong>
-                From product decisions to production reliability
-              </div>
-              <div>
-                <strong>Domains shipped</strong>
-                Booking, payments, discovery, content, rewards
-              </div>
+      <section className="home-hero">
+        <div className="wrap home-hero-grid">
+          <div className="home-hero-copy reveal">
+            <p className="eyebrow">Product engineer · Mobile + backend</p>
+            <h1>Scale your product. Keep customer trust.</h1>
+            <p className="home-hero-lede">I work with small product teams across mobile and backend—from clarifying requirements and shaping system decisions to shipping workflows and improving production reliability.</p>
+            <div className="home-hero-proof" aria-label="Engineering focus areas">
+              <span>Payment integrity</span><i aria-hidden="true" /><span>Failure recovery</span><i aria-hidden="true" /><span>Operational clarity</span>
             </div>
           </div>
-          <figure className="hero-photo reveal reveal-delay-1">
+          <figure className="home-hero-portrait reveal reveal-delay-1">
             <img src="/portrait.jpg" alt="Mashrafi Ahnam Shafin" />
+            <figcaption><span className="home-status-dot" /> Product decisions to production behavior</figcaption>
           </figure>
         </div>
       </section>
 
-      {/* RECOMMENDATIONS */}
-      <section className="cred">
+      <section className="home-proof">
         <div className="wrap">
-          <div className="recommendation-heading">
-            <div>
-              <p className="eyebrow">Recommendations</p>
-              <h2>Kind words from people I’ve worked with.</h2>
-            </div>
-            <a className="upwork-badge" href="https://www.upwork.com/freelancers/~0162ee796651f12a34" target="_blank" rel="noreferrer">
-              <span className="upwork-mark">U</span>
-              <span><strong>Top Rated</strong><small>Upwork freelancer</small></span>
-              <span className="upwork-arrow" aria-hidden="true">↗</span>
-            </a>
+          <div className="home-section-top reveal">
+            <div><p className="eyebrow">Recommendations</p></div>
+            <a className="upwork-badge" href="https://www.upwork.com/freelancers/~0162ee796651f12a34" target="_blank" rel="noreferrer"><span className="upwork-mark">U</span><span><strong>Top Rated</strong><small>Upwork freelancer</small></span><span className="upwork-arrow" aria-hidden="true">↗</span></a>
           </div>
-          <div className="recommendation-grid">
+          <div className="home-recommendation-grid">
             {recommendations.map((item) => (
-              <blockquote className="recommendation-card reveal" key={item.name}>
+              <blockquote className="home-recommendation reveal" key={item.name}>
                 <p>“{item.quote}”</p>
                 <footer>
-                  <span className="recommendation-person">
-                    {item.image ? (
-                      <img className="recommendation-avatar" src={item.image} alt={item.name} loading="lazy" />
-                    ) : (
-                      <span className="recommendation-avatar" aria-hidden="true">{item.initials}</span>
-                    )}
-                    <span className="recommendation-byline">
-                      <a href={item.url} target="_blank" rel="noreferrer">{item.name} ↗</a>
-                      <span>{item.role}</span>
-                    </span>
-                  </span>
-                  <div className="recommendation-current-roles">
-                    {item.currentRoles.map((position) => (
-                      <a className="recommendation-current-role" href={position.url} target="_blank" rel="noreferrer" key={`${position.title}-${position.company}`}>
-                        {position.logo && <img src={position.logo} alt="" loading="lazy" />}
-                        <span><strong>{position.title}</strong><small>{position.company} ↗</small></span>
-                      </a>
-                    ))}
-                  </div>
-                  <time>{item.date}</time>
+                  {item.image ? <img src={item.image} alt="" loading="lazy" /> : <span className="recommendation-avatar" aria-hidden="true">{item.initials}</span>}
+                  <span className="home-recommendation-byline"><a href={item.url} target="_blank" rel="noreferrer">{item.name} ↗</a><small>{item.role}</small></span>
                 </footer>
+                <div className="home-recommendation-roles">
+                  {item.currentRoles.map((position) => (
+                    <a href={position.url} target="_blank" rel="noreferrer" key={`${position.title}-${position.company}`}>
+                      {position.logo && <img src={position.logo} alt="" loading="lazy" />}
+                      <span><strong>{position.title}</strong><small>{position.company} ↗</small></span>
+                    </a>
+                  ))}
+                </div>
+                <time className="home-recommendation-date">{item.date}</time>
               </blockquote>
             ))}
           </div>
         </div>
       </section>
 
-      {/* PRODUCT ENGINEERING */}
-      <section className="products" id="problems">
+      <section className="founder-pressure" id="work">
         <div className="wrap">
-          <div className="section-head reveal">
-            <p className="eyebrow">Product engineering</p>
-            <h2>Engineering for the parts of a product that are hardest to get right.</h2>
-            <p className="lede">
-              Payments, inventory, identity, offline behavior, and third-party integrations all create sharp edges. I make those product constraints explicit and build systems that handle them predictably.
-            </p>
+          <div className="section-head founder-pressure-head reveal">
+            <p className="eyebrow">When the product starts to scale</p>
+            <h2>Growth adds pressure at three points.</h2>
+            <p className="lede">For a small team, more customers and faster delivery can expose gaps between what the product promises and what the system can reliably do.</p>
           </div>
-        </div>
-        <div className="wrap">
-          <div className="problem-cards reveal">
-            <div className="problem-card">
-              <h3>Payments that reconcile</h3>
-              <p>Make retries safe, preserve a clear payment state, and keep every transaction tied to its booking.</p>
-            </div>
-            <div className="problem-card">
-              <h3>Inventory without collisions</h3>
-              <p>Protect shared seats and capacity when multiple people act at the same time.</p>
-            </div>
-            <div className="problem-card">
-              <h3>Identity with clear boundaries</h3>
-              <p>Keep guests, customers, staff, and tenant data in the right workflows.</p>
-            </div>
-            <div className="problem-card">
-              <h3>Useful offline behavior</h3>
-              <p>Keep essential reading, schedules, and field workflows available when signal drops.</p>
-            </div>
-            <div className="problem-card">
-              <h3>Integrations that recover</h3>
-              <p>Design clear ownership and recovery paths across providers, devices, and backend services.</p>
-            </div>
-            <div className="problem-card">
-              <h3>Production-ready delivery</h3>
-              <p>Ship with observable behavior, thoughtful failure states, and a path to maintain the product.</p>
-            </div>
-          </div>
-        </div>
-        {products.map((p, i) => (
-          <div className="wrap" key={p.slug}>
-            <div className={`product-row${i % 2 === 1 ? " reverse" : ""}`}>
-              <div className="product-visual reveal">
-                {p.image ? (
-                  <img src={p.image} alt={p.company} />
-                ) : (
-                  <span className="placeholder">{p.label}</span>
-                )}
-              </div>
-              <div className="product-meta reveal reveal-delay-1">
-                <p className="eyebrow">{p.company}</p>
-                <h3>{p.title}</h3>
-                <p>{p.desc}</p>
-                <div className="product-tags">
-                  {p.tags.map((t) => (
-                    <span className="tag" key={t}>{t}</span>
-                  ))}
-                </div>
-                <p style={{ marginTop: 24 }}>
-                  <Link className="text-link" to={`/products/${p.slug}`}>
-                    Read case study →
-                  </Link>
-                </p>
-              </div>
-            </div>
-          </div>
-        ))}
-        <div className="wrap">
-          <p className="see-all reveal">
-            <Link to="/products">See all case studies →</Link>
-          </p>
-        </div>
-      </section>
-
-      {/* ENGINEERING JUDGMENT */}
-      <section className="judgment" id="engineering">
-        <div className="wrap">
-          <div className="section-head reveal">
-            <p className="eyebrow">Engineering judgment</p>
-            <h2>I think beyond the implementation.</h2>
-            <p className="lede">
-              The difficult part of product engineering is not writing the code.
-              It is deciding what the code should do when reality disagrees with
-              the plan.
-            </p>
-          </div>
-          <div className="judgment-grid">
-            {judgment.map((j) => (
-              <div className="judgment-item reveal" key={j.num}>
-                <p className="num">{j.num}</p>
-                <h3>{j.title}</h3>
-                <p>{j.body}</p>
-              </div>
+          <div className="founder-signals">
+            {founderSignals.map((signal, index) => (
+              <article className="founder-signal reveal" key={signal.title}>
+                <span className="founder-signal-number">0{index + 1}</span>
+                <p className="founder-signal-scope">{signal.scope}</p>
+                <h3>{signal.title}</h3>
+                <p>{signal.body}</p>
+              </article>
             ))}
           </div>
         </div>
       </section>
 
-      {/* OWNERSHIP */}
-      <section className="ownership" id="ownership">
+      <section className="home-work" id="case-work">
+        <div className="wrap">
+          <div className="home-section-top reveal">
+            <div><p className="eyebrow">Selected product work</p><h2>Different businesses. Real system decisions.</h2></div>
+            <Link to="/products" className="home-text-link">All six case studies <span aria-hidden="true">↗</span></Link>
+          </div>
+          <div className="home-case-grid">
+            {featuredProducts.map((product, index) => (
+              <article className="home-case-card reveal" key={product.slug}>
+                <div className="home-case-top"><span>0{index + 1}</span><span className="home-case-status">{product.stage}</span></div>
+                <p className="eyebrow">{product.company}</p>
+                <h3>{product.title}</h3>
+                <p className="home-case-problem">{product.problem}</p>
+                <div className="home-case-outcome"><span>Product outcome</span><p>{product.outcome}</p></div>
+                <div className="home-case-decision"><span>Engineering decision</span><p>{product.decision}</p></div>
+                <div className="product-tags">{product.tags.map((tag) => <span className="tag" key={tag}>{tag}</span>)}</div>
+                <Link className="home-case-link" to={`/products/${product.slug}`}>Explore the case study <span aria-hidden="true">→</span></Link>
+              </article>
+            ))}
+          </div>
+          <p className="home-work-note">Each case study covers the product problem, decisions, architecture, key flows, trade-offs, shipped scope, and what I would improve next.</p>
+        </div>
+      </section>
+
+      <section className="home-approach">
         <div className="wrap">
           <div className="section-head reveal">
-            <p className="eyebrow">Ownership</p>
-            <h2>I take responsibility beyond the code.</h2>
-            <p className="lede">
-              Three principles I hold on every product.
-            </p>
+            <p className="eyebrow">How I work with founders</p>
+            <h2>Make the important product promise hold up in production.</h2>
+            <p className="lede">The case studies show the decisions in practice. My approach is to start with the business risk, design a system the team can operate, then use production feedback to guide the next investment.</p>
           </div>
-          <div className="ownership-grid">
-            {ownership.map((o) => (
-              <div className="ownership-card reveal" key={o.num}>
-                <p className="num">{o.num}</p>
-                <h3>{o.title}</h3>
-                <p>{o.body}</p>
-              </div>
+          <div className="approach-grid">
+            {approach.map((item) => (
+              <article className="approach-card reveal" key={item.number}>
+                <span>{item.number}</span><h3>{item.title}</h3><p>{item.body}</p>
+              </article>
+            ))}
+          </div>
+          <div className="home-principle reveal"><span>My test for a system decision</span><p>Can the team explain what happens when the payment arrives twice, the network disappears, or two people claim the same resource?</p></div>
+        </div>
+      </section>
+
+      <section className="home-thinking">
+        <div className="wrap">
+          <div className="home-notes-head reveal">
+            <div><p className="eyebrow">Notes from the engineering side</p><h2>Decisions that shape the product after launch.</h2><p className="lede">Short essays on payment safety, booking behavior, and the product decisions behind them.</p></div>
+            <Link className="home-text-link" to="/blog">Browse all writing <span aria-hidden="true">→</span></Link>
+          </div>
+          <div className="home-post-grid">
+            {featuredPostData.map((post) => (
+              <Link className="home-post" to={`/blog/${post.slug}`} key={post.slug}>
+                <span className="home-post-meta">{post.time}</span>
+                <div className="home-post-copy"><strong>{post.title}</strong><p>{post.excerpt}</p><span className="home-post-read">Read the note <span aria-hidden="true">→</span></span></div>
+                <i aria-hidden="true">↗</i>
+              </Link>
             ))}
           </div>
         </div>
       </section>
 
-      {/* PERSPECTIVE / WRITING */}
-      <section className="perspective" id="writing">
+      <section className="home-about">
         <div className="wrap">
-          <div className="section-head reveal">
-            <p className="eyebrow">Engineering perspective</p>
-            <h2>Writing on product engineering.</h2>
-            <p className="lede">
-              Selected notes on the decisions behind systems that have to work.
-            </p>
-          </div>
-          <div className="perspective-grid">
-            {featuredPosts.map((p) => (
-              <div className="perspective-item reveal" key={p.slug}>
-                <Link to={`/blog/${p.slug}`}>
-                  <time>{p.time}</time>
-                  <h3>{p.title}</h3>
-                  <p>{p.excerpt}</p>
-                </Link>
-              </div>
-            ))}
-          </div>
-          <p className="see-all reveal" style={{ marginTop: 32 }}>
-            <Link to="/blog">See all notes →</Link>
-          </p>
-        </div>
-      </section>
-
-      {/* ABOUT */}
-      <section className="about" id="about">
-        <div className="wrap">
-          <div className="about-grid">
-            <div className="reveal">
-              <p className="eyebrow">About</p>
-              <h2>I believe engineering means taking responsibility for how a product works.</h2>
-            </div>
-            <div className="reveal reveal-delay-1">
-              <p>
-                I am a Product Engineer. I work with early-stage teams to turn
-                business requirements into reliable software — owning the
-                engineering decisions, system design, and execution required to
-                take products from idea to production.
-              </p>
-              <p>
-                My background is in mobile and backend engineering across
-                booking, payments, discovery, content, and rewards products. I
-                care about what being wrong costs in a specific business, and I
-                design systems around that number.
-              </p>
-              <p>
-                I collaborate directly with founders: I ask the questions that
-                force a requirements document to describe a system that can
-                actually exist on a phone, then I build it, and I stay with it
-                in production.
-              </p>
+          <div className="home-story-panel reveal">
+            <div className="home-story-marker"><span>2023</span><i aria-hidden="true" /><span>Today</span><small>My engineering journey</small></div>
+            <div className="home-story-copy">
+              <p className="eyebrow">A little about how I got here</p>
+              <h2>Working across the stack taught me to see the whole product.</h2>
+              <p>I started with an internship, then grew through contract and product team work across mobile, backend, and operations. Each product made the same lesson clearer: a feature only works when the surrounding system supports the promise it makes.</p>
+              <Link className="home-text-link" to="/about">Read my career story <span aria-hidden="true">→</span></Link>
             </div>
           </div>
         </div>
       </section>
 
-      {/* FINAL CONVERSION */}
-      <section className="convert">
+      <section className="home-contact">
         <div className="wrap">
-          <h2 className="reveal">Your product deserves engineering ownership.</h2>
-          <p className="reveal reveal-delay-1">
-            Tell me what you are building and what needs to work.
-          </p>
-          <div className="convert-links reveal reveal-delay-2">
-            <a className="btn btn-on-dark" href="mailto:mashrafiahnam1@gmail.com">
-              Discuss your product →
-            </a>
-            <a href="https://www.linkedin.com/in/mashrafi-ahnam/" target="_blank" rel="noopener">
-              LinkedIn
-            </a>
-            <a href="mailto:mashrafiahnam1@gmail.com">mashrafiahnam1@gmail.com</a>
+          <div className="home-contact-panel">
+            <div className="home-contact-copy">
+              <p className="eyebrow">For founders of small, growing teams</p>
+              <h2>What needs to become more reliable as you scale?</h2>
+              <p>Tell me what you’re building, where customers or your team are hitting friction, and what the product needs to handle next. A short note is enough to start.</p>
+            </div>
+            <div className="home-contact-actions">
+              <a className="btn btn-primary" href="mailto:mashrafiahnam1@gmail.com?subject=Scaling%20product%20engineering">Email me about your product <span aria-hidden="true">→</span></a>
+              <span>Prefer LinkedIn?</span>
+              <a className="home-contact-email" href="https://www.linkedin.com/in/mashrafi-ahnam/" target="_blank" rel="noreferrer">Connect with me ↗</a>
+              <small>mashrafiahnam1@gmail.com</small>
+            </div>
           </div>
         </div>
       </section>
